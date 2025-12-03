@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "among-us-real-life-server"
+version = "0.0.0"
+description = "Server dependencies for among-us-real-life"
+requires-python = ">=3.8"
+dependencies = [
+  "python-socketio==5.11.1",
+  "python-engineio==4.9.0",
+  "uvicorn"
+]

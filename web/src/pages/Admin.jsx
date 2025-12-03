@@ -28,7 +28,22 @@ export default function Admin() {
 
   useEffect(() => {
     if (!authorized) return;
-    const socket = io({ query: { role: 'ADMIN' } });
+    //  const socket = io('http://localhost:4046', {
+    //    auth: {
+    //      role: "PLAYER",
+    //      token: "test123",
+    //    }
+    //  });
+ 
+    const socket = io('http://localhost:4046', {
+        transports: ["websocket"], // force WS
+        auth: {
+        role: "ADMIN",
+        token: "test123",
+      }
+    });
+    
+
     socketRef.current = socket;
 
     socket.on('play-meeting', async () => {
@@ -98,6 +113,7 @@ export default function Admin() {
       sabotageCharges: Number.isFinite(parseInt(sabotageCharges, 10)) ? parseInt(sabotageCharges, 10) : undefined
     };
     socketRef.current?.emit('start-game', payload);
+    socketRef.current?.emit('message', payload);
   }
 
   function emergencyMeeting() {
@@ -217,7 +233,7 @@ export default function Admin() {
                       )}
                     </List>
                   </Paper>
-                  <Button variant="contained" color="primary" id="start-game" onClick={() => startGameWithConfig()}>Start Game</Button>
+                  <Button variant="contained" color="primary" id="start-game" onClick={() => startGameWithConfig()}>Start Games</Button>
                 </>
               )}
               {showEmergency && (
