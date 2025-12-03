@@ -17,6 +17,7 @@ async def connect(sid: str, env: Dict[str, Any], auth: Optional[Any]) -> None:
             "role": "PLAYER",
             "tasks": [],
         }
+        # TODO: if game is already running and player is a new player, let them wait for a new game to start
     game_state.players.save()
 
 

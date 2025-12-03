@@ -8,7 +8,6 @@ export function useGetAllTasks() {
 
   useEffect(() => {
     socket.emit("get_tasks");
-    socket.emit("message", "Requesting tasks");
 
     socket.on("tasks", (tasks) => {
       console.log("Received tasks:", tasks);

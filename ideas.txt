@@ -1,3 +1,5 @@
+TODO: On start 
+
 Save socket id in cookie to restore session on reload
 Think about how to deal with disconnecting clients. Do tasks count as completed? Are they stashed
 What happens when imposter leaves?

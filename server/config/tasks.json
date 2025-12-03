@@ -1,26 +1,38 @@
 {
-    "taskList": {
-        "1": {
-            "name": "yx",
-            "location": ""
+    "activeTaskList": {
+        "2": {
+            "name": "Fix Wiring",
+            "location": "Electrical"
         },
         "3": {
-            "name": "dy",
+            "name": "Upload Data",
+            "location": "MedBay"
+        },
+        "4": {
+            "name": "Destroy Astroids",
+            "location": "Cockpit"
+        },
+        "5": {
+            "name": "xyz",
             "location": ""
         }
     },
-    "defaultTasks": {
+    "Default Preset": {
         "1": {
-            "taskName": "Swipe Card",
-            "taskLocation": "Admin"
+            "name": "Swipe Card",
+            "location": "Admin"
         },
         "2": {
-            "taskName": "Fix Wiring",
-            "taskLocation": "Electrical"
+            "name": "Fix Wiring",
+            "location": "Electrical"
         },
         "3": {
-            "taskName": "Upload Data",
-            "taskLocation": "MedBay"
+            "name": "Upload Data",
+            "location": "MedBay"
+        },
+        "4": {
+            "name": "Destroy Astroids",
+            "location": "Cockpit"
         }
     }
 }

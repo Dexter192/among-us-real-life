@@ -1,20 +1,17 @@
 import { Typography, List, ListItem, ListItemText, Paper } from "@mui/material";
-import { useGetAllTasks } from "../../../../hooks/useGetAllTasks";
 import TaskItem from "./TaskItem";
 
-export default function TaskList() {
-  const { tasks } = useGetAllTasks();
-
-  if (!tasks || !tasks.taskList) {
+export default function TaskList({ tasks }) {
+  if (!tasks || !tasks.activeTaskList) {
     return <Typography>Loading tasks...</Typography>;
   }
 
-  const taskList = tasks.taskList;
+  const taskList = tasks.activeTaskList;
 
   if (Object.keys(taskList).length === 0) {
     return (
       <ListItem>
-        <ListItemText primary="No tasks yet. Add some above." />
+        <ListItemText primary="No tasks yet." />
       </ListItem>
     );
   }
@@ -22,7 +19,7 @@ export default function TaskList() {
   return (
     <Paper
       variant="outlined"
-      sx={{ width: "100%", maxHeight: 240, overflowY: "auto" }}
+      sx={{ width: "100%", minHeight: 50, maxHeight: 240, overflowY: "auto" }}
     >
       <List dense disablePadding>
         {Object.entries(taskList)

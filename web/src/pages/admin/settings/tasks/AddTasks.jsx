@@ -15,7 +15,7 @@ function AddTask() {
   };
 
   return (
-    <Stack direction="row" spacing={1}>
+    <Stack direction="row" spacing={1} marginTop={2} marginBottom={2}>
       <TextField
         label="Task"
         value={taskName}
