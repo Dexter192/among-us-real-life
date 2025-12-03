@@ -1,34 +1,41 @@
-import { useEffect, useState } from "react";
-import GameConfig from "./GameConfig";
+import { useState, useEffect } from "react";
+import GamePage from "./game/GamePage";
+import AdminLogin from "./login/AdminLogin";
 import { useSocketConnection } from "../../hooks/useSocketConnection";
+import GameSettings from "./settings/GameSettings";
 
 export default function AdminPage() {
-  const { socket } = useSocketConnection(true);
-  const [isStarted, setIsStarted] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
-  useEffect(() => {
-    //     const socket = io("http://localhost:4046", {
-    //       transports: ["websocket"],
-    //       auth: {
-    //         role: "ADMIN",
-    //         token: "test123",
-    //       },
-    //     });
-    // socket.on("connect", () => {
-    //   console.log("CONNECTED:", socket.id);
-    // });
-    //     socket.on("server_ready", () => {
-    //       console.log("Server is ready (yay):", socket.id);
-    //     });
-    //     // Cleanup: disconnect on unmount
-    //     return () => {
-    //       socket.disconnect();
-    //     };
-  }, [socket]); // Empty array: run only once
-
-  if (!isStarted) {
-    return <GameConfig setIsStarted />;
+  if (!isAuthorized) {
+    return <AdminLogin setIsAuthorized={setIsAuthorized} />;
   }
 
-  return <h1>Client Running</h1>;
+  return <AuthorizedAdmin />;
+}
+
+function AuthorizedAdmin() {
+  const [isStarted, setIsStarted] = useState(false);
+  const [emergencyMeeting, setEmergencyMeeting] = useState(false);
+  const { socket } = useSocketConnection(true);
+
+  useEffect(() => {
+    if (socket === null) return;
+    socket.on("start_game", () => {
+      setIsStarted(true);
+    });
+    socket.on("stop_game", () => {
+      setIsStarted(false);
+    });
+  }, [socket]);
+
+  if (socket === null) {
+    return <div>Connecting to server...</div>;
+  }
+
+  if (!isStarted) {
+    return <GameSettings setIsStarted={setIsStarted} />;
+  }
+
+  return <GamePage />;
 }

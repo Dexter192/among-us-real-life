@@ -1,3 +1,3 @@
-from events import config, connect
+from . import config, connect, tasks, game
 
-__all__ = ["config", "connect"]
+__all__ = ["config", "connect", "tasks", "game"]

@@ -1,0 +1,26 @@
+{
+    "taskList": {
+        "1": {
+            "name": "yx",
+            "location": ""
+        },
+        "3": {
+            "name": "dy",
+            "location": ""
+        }
+    },
+    "defaultTasks": {
+        "1": {
+            "taskName": "Swipe Card",
+            "taskLocation": "Admin"
+        },
+        "2": {
+            "taskName": "Fix Wiring",
+            "taskLocation": "Electrical"
+        },
+        "3": {
+            "taskName": "Upload Data",
+            "taskLocation": "MedBay"
+        }
+    }
+}

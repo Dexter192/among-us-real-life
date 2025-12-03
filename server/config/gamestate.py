@@ -1,0 +1,18 @@
+from .json_store import JsonStore
+
+
+class GameState:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.started = False
+            cls._instance.config = JsonStore("server/config/config.json")
+            cls._instance.tasks = JsonStore("server/config/tasks.json")
+            cls._instance.players = JsonStore("server/config/players.json")
+            cls._instance.players.reset({"admins": {}, "players": {}})
+        return cls._instance
+
+    def __init__(self):
+        pass

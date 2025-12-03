@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Player from "./pages/Player.jsx";
 import Admin from "./pages/Admin.jsx";
 import AdminPage from "./pages/admin/AdminPage.jsx";
+import PlayerPage from "./pages/player/PlayerPage.jsx";
 import {
   AppBar,
   Box,
@@ -82,7 +83,8 @@ function App() {
       >
         <Container maxWidth="sm" sx={{ textAlign: "center" }}>
           <Routes>
-            <Route path="/" element={<AdminPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/" element={<PlayerPage />} />
             {/* <Route path="/" element={<Player />} /> */}
             {/* <Route path="/admin" element={<Admin />} /> */}
           </Routes>

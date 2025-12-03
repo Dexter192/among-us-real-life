@@ -1,0 +1,8 @@
+{
+  "numImpostors": 1,
+  "emergencyCooldownMinutes": 5,
+  "killCooldownSeconds": 30,
+  "sabotageSeconds": 45,
+  "sabotageCharges": 3,
+  "maxPlayersPerTask": 2
+}

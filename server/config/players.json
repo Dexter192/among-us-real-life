@@ -1,0 +1,17 @@
+{
+    "admins": {
+        "4t9u453s1ndmipu7jnb": {
+            "role": "ADMIN"
+        }
+    },
+    "players": {
+        "583b0shrmgrmiptkcxh": {
+            "role": "PLAYER",
+            "tasks": []
+        },
+        "4t9u453s1ndmipu7jnb": {
+            "role": "PLAYER",
+            "tasks": []
+        }
+    }
+}
