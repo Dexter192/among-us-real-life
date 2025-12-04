@@ -1,9 +1,9 @@
-import { Box, Typography, Stack } from "@mui/material";
+import { Box, Typography, Stack, TextField } from "@mui/material";
 import { useGetPlayerInfo } from "../../../hooks/useGetPlayerInfo";
 import { useEffect, useState } from "react";
 
 export default function PlayerInfo({ gameState }) {
-  const { playerInfo, refetchPlayerInfo } = useGetPlayerInfo();
+  const { playerInfo, handleNameChange } = useGetPlayerInfo();
   const [playerCount, setPlayerCount] = useState(null);
 
   useEffect(() => {
@@ -26,19 +26,22 @@ export default function PlayerInfo({ gameState }) {
       <Box>
         <Typography
           variant="caption"
-          sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+          sx={{ color: "rgba(255, 255, 255, 0.7)", display: "block", mb: 1 }}
         >
           Dein Name
         </Typography>
-        <Typography variant="h6" sx={{ color: "white", fontWeight: 700 }}>
-          {playerInfo ? playerInfo.name : "---"}
-        </Typography>
+        <TextField
+          value={playerInfo ? playerInfo.name : ""}
+          variant="outlined"
+          size="small"
+          onChange={handleNameChange}
+        />
       </Box>
       <Box sx={{ borderLeft: "1px solid rgba(255, 255, 255, 0.3)" }} />
       <Box>
         <Typography
           variant="caption"
-          sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+          sx={{ color: "rgba(255, 255, 255, 0.7)", display: "block", mb: 1 }}
         >
           Spieler in der Lobby
         </Typography>

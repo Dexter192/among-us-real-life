@@ -7,7 +7,7 @@ game_state = GameState()
 
 
 @sio.event
-async def get_tasks(sid: str) -> None:
+async def get_all_tasks(sid: str) -> None:
     print("Requesting tasks:", sid)
     await sio.emit("tasks", game_state.tasks.data, to=sid)
 
@@ -76,3 +76,12 @@ async def delete_task_preset(sid: str, data: Any) -> None:
             await sio.emit("tasks", game_state.tasks.data, to=sid)
     else:
         print("Preset data must include a 'taskSetName' field")
+
+
+@sio.event
+async def get_tasks(sid: str, data: Any) -> None:
+    print(f"Current player tasks data: {game_state.players['players']}")
+    auth_id = data.get("authId")
+    print("Requesting tasks:", auth_id)
+    player_tasks = game_state.players["players"].get(auth_id, {}).get("tasks", [])
+    await sio.emit("player_tasks", player_tasks, to=sid)

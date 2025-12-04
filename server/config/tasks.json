@@ -1,5 +1,9 @@
 {
     "activeTaskList": {
+        "1": {
+            "name": "Swipe Card",
+            "location": "Admin"
+        },
         "2": {
             "name": "Fix Wiring",
             "location": "Electrical"
@@ -11,10 +15,6 @@
         "4": {
             "name": "Destroy Astroids",
             "location": "Cockpit"
-        },
-        "5": {
-            "name": "xyz",
-            "location": ""
         }
     },
     "Default Preset": {

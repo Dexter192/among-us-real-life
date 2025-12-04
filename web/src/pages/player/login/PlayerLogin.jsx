@@ -18,7 +18,7 @@ export default function PlayerLogin({ setIsAuthorized }) {
   // Auto-authorize in dev mode
   useEffect(() => {
     if (!socket) return;
-    if (!import.meta.env.DEV) {
+    if (import.meta.env.DEV) {
       socket.emit("login", {
         role: "PLAYER",
         name: "DevPlayer",

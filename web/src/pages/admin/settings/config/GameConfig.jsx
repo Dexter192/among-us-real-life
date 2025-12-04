@@ -80,12 +80,12 @@ function GameConfig() {
               fullWidth
             />
             <TextField
-              label="Max Players per Task"
-              value={gameConfig.maxPlayersPerTask}
+              label="Tasks per player"
+              value={gameConfig.tasksPerPlayer}
               onChange={(e) =>
                 updateConfig({
                   ...gameConfig,
-                  maxPlayersPerTask: e.target.value,
+                  tasksPerPlayer: e.target.value,
                 })
               }
               inputMode="numeric"

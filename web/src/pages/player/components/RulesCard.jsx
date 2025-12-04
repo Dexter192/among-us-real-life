@@ -6,7 +6,6 @@ import {
   Stack,
   Box,
   useTheme,
-  Chip,
 } from "@mui/material";
 
 export default function RulesCard() {

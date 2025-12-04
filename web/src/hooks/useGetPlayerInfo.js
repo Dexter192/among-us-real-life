@@ -13,7 +13,6 @@ export function useGetPlayerInfo() {
     socket.emit("get_player_info", { authId });
 
     socket.on("player_info", (info) => {
-      console.log("Received player info:", info);
       setPlayerInfo(info);
     });
   }, [socket]);
@@ -22,5 +21,11 @@ export function useGetPlayerInfo() {
     socket.emit("get_player_info", { authId });
   };
 
-  return { playerInfo, refetchPlayerInfo };
+  const handleNameChange = (event) => {
+    const newName = event.target.value;
+    setPlayerInfo({ ...playerInfo, name: newName });
+    socket.emit("update_player_name", { authId, name: newName });
+  };
+
+  return { playerInfo, refetchPlayerInfo, handleNameChange };
 }

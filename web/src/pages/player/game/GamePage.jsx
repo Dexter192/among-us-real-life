@@ -1,20 +1,28 @@
-import { Button } from "@mui/material";
-import { useEffect } from "react";
-import { useSocketConnection } from "../../../hooks/useSocketConnection";
+import { useGetPlayerTasks } from "../../../hooks/useGetPlayerTasks";
+import Task from "./tasks/Task";
+import { Box, Container, Typography, Stack } from "@mui/material";
 
 export default function GamePage() {
-  const { socket } = useSocketConnection();
-
-  useEffect(() => {
-    if (socket == null) return;
-    socket.on("placeholder", () => {
-      // Placeholder for events like emergency meetings
-    });
-  }, [socket]);
+  const { tasks } = useGetPlayerTasks();
 
   return (
-    <>
-      <h1>Game is running</h1>
-    </>
+    <Box sx={{ bgcolor: "background.default", minHeight: "100vh", py: 3 }}>
+      <Container maxWidth="md">
+        <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
+          Deine Aufgaben
+        </Typography>
+        {tasks === undefined ? (
+          <Typography>Lade Aufgaben...</Typography>
+        ) : tasks.length === 0 ? (
+          <Typography>Keine Aufgaben verfügbar.</Typography>
+        ) : (
+          <Stack spacing={0}>
+            {tasks.map((task) => (
+              <Task key={task.id} task={task} />
+            ))}
+          </Stack>
+        )}
+      </Container>
+    </Box>
   );
 }
