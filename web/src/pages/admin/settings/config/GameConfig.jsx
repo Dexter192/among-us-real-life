@@ -22,73 +22,73 @@ function GameConfig() {
             <TextField
               label="Gametime (minutes)"
               value={gameConfig.gameTimeMinutes}
+              type="number"
               onChange={(e) =>
                 updateConfig({ ...gameConfig, gameTimeMinutes: e.target.value })
               }
-              inputMode="numeric"
               fullWidth
             />
             <TextField
               label="Number of Impostors"
               value={gameConfig.numImpostors}
+              type="number"
               onChange={(e) =>
                 updateConfig({ ...gameConfig, numImpostors: e.target.value })
               }
-              inputMode="numeric"
               fullWidth
             />
             <TextField
               label="Emergency Cooldown (minutes)"
               value={gameConfig.emergencyCooldownMinutes}
+              type="number"
               onChange={(e) =>
                 updateConfig({
                   ...gameConfig,
                   emergencyCooldownMinutes: e.target.value,
                 })
               }
-              inputMode="decimal"
               fullWidth
             />
             <TextField
               label="Kill Cooldown (seconds)"
               value={gameConfig.killCooldownSeconds}
+              type="number"
               onChange={(e) =>
                 updateConfig({
                   ...gameConfig,
                   killCooldownSeconds: e.target.value,
                 })
               }
-              inputMode="decimal"
               fullWidth
             />
             <TextField
               label="Sabotage Duration (seconds)"
               value={gameConfig.sabotageSeconds}
+              type="number"
               onChange={(e) =>
                 updateConfig({ ...gameConfig, sabotageSeconds: e.target.value })
               }
-              inputMode="numeric"
               fullWidth
             />
             <TextField
               label="Sabotage Charges (shared)"
               value={gameConfig.sabotageCharges}
+              type="number"
               onChange={(e) =>
                 updateConfig({ ...gameConfig, sabotageCharges: e.target.value })
               }
-              inputMode="numeric"
               fullWidth
             />
             <TextField
               label="Tasks per player"
               value={gameConfig.tasksPerPlayer}
+              type="number"
               onChange={(e) =>
                 updateConfig({
                   ...gameConfig,
                   tasksPerPlayer: e.target.value,
                 })
               }
-              inputMode="numeric"
               fullWidth
             />
           </Stack>

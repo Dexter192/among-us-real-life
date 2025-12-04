@@ -23,7 +23,11 @@ function AuthorizedPlayer() {
     return <div>Connecting to server...</div>;
   }
 
-  if (!gameState.started) {
+  if (
+    !gameState.started &&
+    !gameState.imposter_win &&
+    !gameState.crewmate_win
+  ) {
     return <LobbyPage gameState={gameState} />;
   }
 

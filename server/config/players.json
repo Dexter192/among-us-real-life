@@ -1,15 +1,8 @@
 {
-    "admins": {
-        "gs1wm4ml7xtmirf4jym": {
-            "sid": "7DrPB5EqCB8gIhVQAAAF",
-            "role": "ADMIN",
-            "tasks": [],
-            "name": null
-        }
-    },
+    "admins": {},
     "players": {
         "252u1ipxd0cmiretmxw": {
-            "sid": "t-Ydqq9h58akYfkdAAAJ",
+            "sid": "Wm5qU8RVBBaeU4CqAAAF",
             "role": "PLAYER",
             "tasks": [
                 {
@@ -17,11 +10,16 @@
                     "location": "Admin"
                 },
                 {
-                    "name": "Destroy Astroids",
-                    "location": "Cockpit"
+                    "name": "Fix Wiring",
+                    "location": "Electrical"
+                },
+                {
+                    "name": "Upload Data",
+                    "location": "MedBay"
                 }
             ],
-            "name": "DevPlayer"
+            "name": "DevPlayer",
+            "game_role": "CREWMATE"
         }
     }
 }

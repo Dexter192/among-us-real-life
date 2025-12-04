@@ -10,9 +10,13 @@ class GameState:
             cls._instance.config = JsonStore("server/config/config.json")
             cls._instance.tasks = JsonStore("server/config/tasks.json")
             cls._instance.players = JsonStore("server/config/players.json")
-            cls._instance.state = {}
-            cls._instance.state["started"] = False
-            cls._instance.state["player_count"] = 0
+            cls._instance.state = {
+                "started": False,
+                "endOfGameUTC": 0,
+                "player_count": 0,
+                "imposter_win": False,
+                "crewmate_win": False,
+            }
             cls._instance.players.reset({"admins": {}, "players": {}})
         return cls._instance
 
