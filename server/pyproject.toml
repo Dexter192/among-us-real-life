@@ -10,5 +10,6 @@ requires-python = ">=3.8"
 dependencies = [
   "python-socketio==5.11.1",
   "python-engineio==4.9.0",
-  "uvicorn"
+  "uvicorn",
+  "dotenv",
 ]

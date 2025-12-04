@@ -7,10 +7,12 @@ class GameState:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.started = False
             cls._instance.config = JsonStore("server/config/config.json")
             cls._instance.tasks = JsonStore("server/config/tasks.json")
             cls._instance.players = JsonStore("server/config/players.json")
+            cls._instance.state = {}
+            cls._instance.state["started"] = False
+            cls._instance.state["player_count"] = 0
             cls._instance.players.reset({"admins": {}, "players": {}})
         return cls._instance
 

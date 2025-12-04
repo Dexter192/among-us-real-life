@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import GamePage from "./game/GamePage";
 import AdminLogin from "./login/AdminLogin";
-import { useSocketConnection } from "../../hooks/useSocketConnection";
 import GameSettings from "./settings/GameSettings";
+import { useGetGameState } from "../../hooks/useGetGameState";
+import { useSocketConnection } from "../../hooks/useSocketConnection";
 
 export default function AdminPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -15,26 +16,15 @@ export default function AdminPage() {
 }
 
 function AuthorizedAdmin() {
-  const [isStarted, setIsStarted] = useState(false);
-  const [emergencyMeeting, setEmergencyMeeting] = useState(false);
-  const { socket } = useSocketConnection(true);
+  const { socket } = useSocketConnection(true); // Initialize socket connection as an admin
+  const { gameState } = useGetGameState();
 
-  useEffect(() => {
-    if (socket === null) return;
-    socket.on("start_game", () => {
-      setIsStarted(true);
-    });
-    socket.on("stop_game", () => {
-      setIsStarted(false);
-    });
-  }, [socket]);
-
-  if (socket === null) {
+  if (gameState === undefined) {
     return <div>Connecting to server...</div>;
   }
 
-  if (!isStarted) {
-    return <GameSettings setIsStarted={setIsStarted} />;
+  if (!gameState.started) {
+    return <GameSettings />;
   }
 
   return <GamePage />;

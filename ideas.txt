@@ -1,4 +1,9 @@
-TODO: On start 
+TODO: 
+Handle players joining late
+On start, assign tasks to players
+Admin confirm task
+Killing(?)
+Separation imposter and player 
 
 Save socket id in cookie to restore session on reload
 Think about how to deal with disconnecting clients. Do tasks count as completed? Are they stashed
@@ -29,3 +34,11 @@ pages
  - player
    - Tasks (look as cards, not checkbox)
 
+
+
+Write two cards next to each other using @mui which very briefly describe the rules of AmongUs in germand to players:
+
+The first card for crewmates should include at least:
+- Aufgaben werden bei Spielstart verteilt
+- Erfüllt alle Aufgaben um zu gewinnen
+- 

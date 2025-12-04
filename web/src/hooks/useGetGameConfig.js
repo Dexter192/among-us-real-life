@@ -16,5 +16,9 @@ export function useGetGameConfig() {
     });
   }, [socket]);
 
-  return { gameConfig };
+  const updateConfig = (newConfig) => {
+    socket.emit("update_game_config", newConfig);
+  };
+
+  return { gameConfig, updateConfig };
 }

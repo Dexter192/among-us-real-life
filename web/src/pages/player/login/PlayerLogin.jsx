@@ -9,18 +9,20 @@ import {
 } from "@mui/material";
 import { useSocketConnection } from "../../../hooks/useSocketConnection";
 
-export default function AdminLogin({ setIsAuthorized }) {
-  const [adminCode, setAdminCode] = useState("");
+export default function PlayerLogin({ setIsAuthorized }) {
+  const [playerName, setPlayerName] = useState("");
+  const [playerCode, setPlayerCode] = useState("");
   const [isWaitingForAuth, setIsWaitingForAuth] = useState(false);
   const { socket } = useSocketConnection();
 
   // Auto-authorize in dev mode
   useEffect(() => {
     if (!socket) return;
-    if (import.meta.env.DEV) {
+    if (!import.meta.env.DEV) {
       socket.emit("login", {
-        role: "ADMIN",
-        password: import.meta.env.VITE_ADMIN_PASSWORD,
+        role: "PLAYER",
+        name: "DevPlayer",
+        password: import.meta.env.VITE_PLAYER_PASSWORD,
         authId: localStorage.getItem("authId"),
       });
     }
@@ -31,7 +33,7 @@ export default function AdminLogin({ setIsAuthorized }) {
     if (!socket) return;
 
     socket.emit("is_logged_in", {
-      role: "ADMIN",
+      role: "PLAYER",
       authId: localStorage.getItem("authId"),
     });
 
@@ -40,8 +42,7 @@ export default function AdminLogin({ setIsAuthorized }) {
       if (response.success) {
         setIsAuthorized(true);
       } else {
-        alert(`Login failed: ${response.error}`);
-        setAdminCode("");
+        setPlayerCode("");
       }
     });
 
@@ -51,12 +52,13 @@ export default function AdminLogin({ setIsAuthorized }) {
   }, [socket, setIsAuthorized]);
 
   const handleLogin = () => {
-    if (!adminCode || !socket) return;
+    if (!playerCode || !socket) return;
 
     setIsWaitingForAuth(true);
     socket.emit("login", {
-      role: "ADMIN",
-      password: adminCode,
+      role: "PLAYER",
+      password: playerCode,
+      name: playerName,
       authId: localStorage.getItem("authId"),
     });
   };
@@ -67,13 +69,22 @@ export default function AdminLogin({ setIsAuthorized }) {
         <CardContent>
           <Stack spacing={2}>
             <Typography variant="h6" gutterBottom>
-              Admin Access
+              Among Us - AWO Karlsruhe
             </Typography>
             <TextField
-              label="Admin Password"
+              label="Name"
+              type="text"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              disabled={isWaitingForAuth}
+              fullWidth
+            />
+
+            <TextField
+              label="Password"
               type="password"
-              value={adminCode}
-              onChange={(e) => setAdminCode(e.target.value)}
+              value={playerCode}
+              onChange={(e) => setPlayerCode(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !isWaitingForAuth) {
                   handleLogin();
@@ -85,7 +96,7 @@ export default function AdminLogin({ setIsAuthorized }) {
             <Button
               variant="contained"
               onClick={handleLogin}
-              disabled={!adminCode || isWaitingForAuth}
+              disabled={!playerCode || isWaitingForAuth}
             >
               {isWaitingForAuth ? "Authenticating..." : "Enter"}
             </Button>

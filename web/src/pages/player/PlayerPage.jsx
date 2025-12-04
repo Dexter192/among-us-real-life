@@ -1,11 +1,31 @@
-import { useEffect, useState } from "react";
+import { useGetGameState } from "../../hooks/useGetGameState";
 import { useSocketConnection } from "../../hooks/useSocketConnection";
+import LobbyPage from "./lobby/LobbyPage";
+import GamePage from "./game/GamePage";
+import PlayerLogin from "./login/PlayerLogin";
+import { useState } from "react";
 
-export default function AdminPage() {
-  const { socket } = useSocketConnection();
-  const [isStarted, setIsStarted] = useState(false);
+export default function PlayerPage() {
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
-  useEffect(() => {}, [socket]); // Empty array: run only once
+  if (!isAuthorized) {
+    return <PlayerLogin setIsAuthorized={setIsAuthorized} />;
+  }
 
-  return <h1>Client Running</h1>;
+  return <AuthorizedPlayer />;
+}
+
+function AuthorizedPlayer() {
+  const { socket } = useSocketConnection(); // Initialize socket connection as a player
+  const { gameState } = useGetGameState();
+
+  if (gameState === undefined) {
+    return <div>Connecting to server...</div>;
+  }
+
+  if (!gameState.started) {
+    return <LobbyPage gameState={gameState} />;
+  }
+
+  return <GamePage gameState={gameState} />;
 }

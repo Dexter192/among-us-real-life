@@ -21,10 +21,10 @@ export default function Admin() {
   const [adminCode, setAdminCode] = useState("");
   const [authId] = useState(() => {
     // simple per-tab admin id
-    let a = sessionStorage.getItem("adminAuth");
+    let a = sessionStorage.getItem("authId");
     if (!a) {
       a = Math.random().toString(36).slice(2) + Date.now().toString(36);
-      sessionStorage.setItem("adminAuth", a);
+      sessionStorage.setItem("authId", a);
     }
     return a;
   });

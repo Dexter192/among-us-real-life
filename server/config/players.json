@@ -1,14 +1,30 @@
 {
     "admins": {
-        "4t9u453s1ndmipu7jnb": {
-            "role": "ADMIN"
+        "gs1wm4ml7xtmirf4jym": {
+            "sid": "RRy9aOdEWitdqlPEAAAJ",
+            "role": "ADMIN",
+            "tasks": [],
+            "name": null
         }
     },
     "players": {
-        "583b0shrmgrmiptkcxh": {
-            "sid": "AWhfS7RUJukx7ca1AAAB",
+        "ak6jgcwvozmirfkfbq": {
+            "sid": "Sat7mdliWp6Qf7dGAAB2",
             "role": "PLAYER",
-            "tasks": []
+            "tasks": [],
+            "name": "DevPlayer"
+        },
+        "0uy1dra3iyumirhf6ov": {
+            "sid": "9YGrJqf3s6gco7J5AAAd",
+            "role": "PLAYER",
+            "tasks": [],
+            "name": null
+        },
+        "kgepihdaoybmirhfwbk": {
+            "sid": "HhJ7RedGtjTpHEbdAAB3",
+            "role": "PLAYER",
+            "tasks": [],
+            "name": "Daniel"
         }
     }
 }
