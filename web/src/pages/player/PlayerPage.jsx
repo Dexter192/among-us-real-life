@@ -3,6 +3,7 @@ import { useSocketConnection } from "../../hooks/useSocketConnection";
 import LobbyPage from "./lobby/LobbyPage";
 import GamePage from "./game/GamePage";
 import PlayerLogin from "./login/PlayerLogin";
+import EmergencyMeeting from "./game/emergency/EmergencyMeeting";
 import { useState } from "react";
 
 export default function PlayerPage() {
@@ -29,6 +30,10 @@ function AuthorizedPlayer() {
     !gameState.crewmate_win
   ) {
     return <LobbyPage gameState={gameState} />;
+  }
+
+  if (gameState.emergency_meeting) {
+    return <EmergencyMeeting gameState={gameState} />;
   }
 
   return <GamePage gameState={gameState} />;

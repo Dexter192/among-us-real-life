@@ -1,6 +1,7 @@
 import TaskTab from "./tasks/TaskTab";
-import Timer from "./timer/Timer";
+import GameTimer from "../../../components/Timer";
 import GameOver from "./gameOver/GameOver";
+import ReportDeadBody from "../components/ReportDeadBody";
 
 export default function GamePage({ gameState }) {
   if (gameState.imposter_win || gameState.crewmate_win) {
@@ -9,7 +10,8 @@ export default function GamePage({ gameState }) {
 
   return (
     <>
-      <Timer />
+      <GameTimer endTimeUTC={gameState.endOfGameUTC} />
+      <ReportDeadBody />
       <TaskTab />
     </>
   );

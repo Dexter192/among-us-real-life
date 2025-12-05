@@ -45,6 +45,9 @@ async def perform_login(sid: str, data: Dict[str, Any]) -> None:
         "role": role,
         "tasks": [],
         "name": name,
+        "isAlive": True,
+        "votes": 0,
+        "votedFor": None,
     }
 
     game_state.state["player_count"] = len(game_state.players["players"])

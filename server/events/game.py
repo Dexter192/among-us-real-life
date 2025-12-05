@@ -9,6 +9,17 @@ state = GameState()
 game_timer_task = None
 
 
+def reset_player_states():
+    players = state.players.data.get("players", {})
+    for player in players.values():
+        player["isAlive"] = True
+        player["game_role"] = None
+        player["tasks"] = []
+        player["votes"] = 0
+        player["votedFor"] = None
+    state.players.save()
+
+
 def assign_tasks_to_players():
     players = state.players.data.get("players", {})
     tasks = copy.deepcopy(state.tasks.data.get("activeTaskList", {}))
@@ -42,9 +53,11 @@ def initilize_game_state():
     state.state["started"] = True
     state.state["imposter_win"] = False
     state.state["crewmate_win"] = False
+    state.state["emergency_meeting"] = False
+    state.state["votes"] = {}
     state.state["endOfGameUTC"] = (
         datetime.now()
-        + timedelta(seconds=int(state.config.data.get("gameTimeMinutes")))
+        + timedelta(minutes=int(state.config.data.get("gameTimeMinutes")))
     ).isoformat()
 
 
@@ -73,6 +86,7 @@ async def game_timer():
 async def start_game(sid: str) -> None:
     global game_timer_task
     print("Starting game:", sid)
+    reset_player_states()
     assign_tasks_to_players()
     assign_roles_to_players()
     initilize_game_state()

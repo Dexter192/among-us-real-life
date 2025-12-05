@@ -1,8 +1,18 @@
 {
-    "admins": {},
+    "admins": {
+        "gs1wm4ml7xtmirf4jym": {
+            "sid": "uSXLygUAIvK6gNGjAAAF",
+            "role": "ADMIN",
+            "tasks": [],
+            "name": null,
+            "isAlive": true,
+            "votes": 0,
+            "votedFor": null
+        }
+    },
     "players": {
         "252u1ipxd0cmiretmxw": {
-            "sid": "Wm5qU8RVBBaeU4CqAAAF",
+            "sid": "FsEBTDsZtjsuOrhhAAAJ",
             "role": "PLAYER",
             "tasks": [
                 {
@@ -19,7 +29,10 @@
                 }
             ],
             "name": "DevPlayer",
-            "game_role": "CREWMATE"
+            "isAlive": true,
+            "votes": 0,
+            "votedFor": null,
+            "game_role": "IMPOSTER"
         }
     }
 }

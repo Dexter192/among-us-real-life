@@ -1,9 +1,9 @@
 {
     "numImpostors": "1",
-    "emergencyCooldownMinutes": 5,
+    "meetingTimeMinutes": "1",
     "killCooldownSeconds": 30,
     "sabotageSeconds": 45,
     "sabotageCharges": 3,
     "tasksPerPlayer": "3",
-    "gameTimeMinutes": "3"
+    "gameTimeMinutes": "20"
 }

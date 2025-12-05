@@ -28,3 +28,15 @@ async def update_player_name(sid: str, data: dict) -> None:
         await sio.emit("players", gamestate.players["players"])
     else:
         print(f"AuthId: {auth_id} not found in players")
+
+
+@sio.event
+async def kill_player(sid: str, data: dict) -> None:
+    auth_id = data.get("authId")
+    if auth_id in gamestate.players["players"]:
+        gamestate.players["players"][auth_id]["isAlive"] = False
+        gamestate.players.save()
+        await sio.emit("player_info", gamestate.players["players"][auth_id], to=sid)
+        await sio.emit("players", gamestate.players["players"])
+    else:
+        print(f"AuthId: {auth_id} not found in players")

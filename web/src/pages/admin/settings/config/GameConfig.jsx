@@ -38,13 +38,13 @@ function GameConfig() {
               fullWidth
             />
             <TextField
-              label="Emergency Cooldown (minutes)"
-              value={gameConfig.emergencyCooldownMinutes}
+              label="Meeting time (minutes)"
+              value={gameConfig.meetingTimeMinutes}
               type="number"
               onChange={(e) =>
                 updateConfig({
                   ...gameConfig,
-                  emergencyCooldownMinutes: e.target.value,
+                  meetingTimeMinutes: e.target.value,
                 })
               }
               fullWidth
