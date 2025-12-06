@@ -1,6 +1,6 @@
-import { useGetPlayers } from "../../../../hooks/useGetPlayers";
+import { useGetPlayers } from "../../hooks/useGetPlayers";
 import PlayerCard from "./PlayerCard";
-import MeetingTimer from "../../../../components/Timer";
+import MeetingTimer from "../Timer";
 import {
   Box,
   Container,
@@ -10,10 +10,12 @@ import {
   useTheme,
 } from "@mui/material";
 import { Gavel } from "@mui/icons-material";
+import { useGetPlayerInfo } from "../../hooks/useGetPlayerInfo";
 
-export default function EmergencyMeeting({ gameState }) {
+export default function EmergencyMeeting({ gameState, isAdmin = false }) {
   const { players } = useGetPlayers();
   const theme = useTheme();
+  const { playerInfo } = useGetPlayerInfo();
 
   if (players === undefined) {
     return (
@@ -57,9 +59,17 @@ export default function EmergencyMeeting({ gameState }) {
               Notfall-Treffen
             </Typography>
           </Stack>
-          <Typography variant="body1" color="text.secondary">
-            Stimmt ab, um einen Spieler auszuschließen
-          </Typography>
+          {!playerInfo?.isAlive && (
+            <Typography variant="body1" color="text.secondary">
+              Du bist tot und kannst nicht abstimmen.
+            </Typography>
+          )}
+          {playerInfo?.isAlive && (
+            <Typography variant="body1" color="text.secondary">
+              Besprecht euch und versucht, einen Imposter aus dem Spiel zu
+              werfen!
+            </Typography>
+          )}
         </Box>
 
         {/* Timer */}
@@ -84,11 +94,18 @@ export default function EmergencyMeeting({ gameState }) {
                 gap: 1,
               }}
             >
-              ✓ Lebende Spieler ({Object.keys(alive).length})
+              Lebende Spieler ({Object.keys(alive).length})
             </Typography>
             <Stack spacing={2}>
               {Object.entries(alive).map(([id, player]) => (
-                <PlayerCard key={id} id={id} player={player} isAlive={true} />
+                <PlayerCard
+                  key={id}
+                  id={id}
+                  player={player}
+                  isAlive={true}
+                  players={players}
+                  isAdmin={isAdmin}
+                />
               ))}
             </Stack>
           </Box>
@@ -113,11 +130,17 @@ export default function EmergencyMeeting({ gameState }) {
                 gap: 1,
               }}
             >
-              ✗ Tote Spieler ({Object.keys(dead).length})
+              Tote Spieler ({Object.keys(dead).length})
             </Typography>
             <Stack spacing={2}>
               {Object.entries(dead).map(([id, player]) => (
-                <PlayerCard key={id} id={id} player={player} isAlive={false} />
+                <PlayerCard
+                  key={id}
+                  id={id}
+                  player={player}
+                  isAlive={false}
+                  isAdmin={isAdmin}
+                />
               ))}
             </Stack>
           </Box>

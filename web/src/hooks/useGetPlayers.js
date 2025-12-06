@@ -12,7 +12,6 @@ export function useGetPlayers() {
     socket.emit("get_players");
 
     socket.on("players", (players) => {
-      console.log("Received players:", players);
       setPlayers(players);
     });
   }, [socket]);

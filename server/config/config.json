@@ -1,6 +1,6 @@
 {
     "numImpostors": "1",
-    "meetingTimeMinutes": "1",
+    "meetingTimeMinutes": "5",
     "killCooldownSeconds": 30,
     "sabotageSeconds": 45,
     "sabotageCharges": 3,

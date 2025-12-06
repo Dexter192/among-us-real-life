@@ -40,6 +40,14 @@ async def perform_login(sid: str, data: Dict[str, Any]) -> None:
     name = data.get("name")
 
     player_role = "admins" if role == "ADMIN" else "players"
+
+    # Check if the player already exists and if so, only update the sid
+    if auth_id in game_state.players[player_role].keys():
+        game_state.players[player_role][auth_id]["sid"] = sid
+        game_state.players.save()
+        await sio.emit("login_response", {"success": True}, to=sid)
+        return
+
     game_state.players[player_role][auth_id] = {
         "sid": sid,
         "role": role,

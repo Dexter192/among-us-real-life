@@ -1,7 +1,7 @@
 {
     "admins": {
         "gs1wm4ml7xtmirf4jym": {
-            "sid": "uSXLygUAIvK6gNGjAAAF",
+            "sid": "kbdb17YhBaE4ATQkAAAL",
             "role": "ADMIN",
             "tasks": [],
             "name": null,
@@ -12,13 +12,9 @@
     },
     "players": {
         "252u1ipxd0cmiretmxw": {
-            "sid": "FsEBTDsZtjsuOrhhAAAJ",
+            "sid": "QcwVWYmmmHn23tWtAAAT",
             "role": "PLAYER",
             "tasks": [
-                {
-                    "name": "Swipe Card",
-                    "location": "Admin"
-                },
                 {
                     "name": "Fix Wiring",
                     "location": "Electrical"
@@ -26,6 +22,10 @@
                 {
                     "name": "Upload Data",
                     "location": "MedBay"
+                },
+                {
+                    "name": "Destroy Astroids",
+                    "location": "Cockpit"
                 }
             ],
             "name": "DevPlayer",

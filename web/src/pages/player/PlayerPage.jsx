@@ -3,8 +3,9 @@ import { useSocketConnection } from "../../hooks/useSocketConnection";
 import LobbyPage from "./lobby/LobbyPage";
 import GamePage from "./game/GamePage";
 import PlayerLogin from "./login/PlayerLogin";
-import EmergencyMeeting from "./game/emergency/EmergencyMeeting";
+import EmergencyMeeting from "../../components/meeting/EmergencyMeeting";
 import { useState } from "react";
+import { useVoteForPlayer } from "../../hooks/useVoteForPlayer";
 
 export default function PlayerPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -30,10 +31,6 @@ function AuthorizedPlayer() {
     !gameState.crewmate_win
   ) {
     return <LobbyPage gameState={gameState} />;
-  }
-
-  if (gameState.emergency_meeting) {
-    return <EmergencyMeeting gameState={gameState} />;
   }
 
   return <GamePage gameState={gameState} />;

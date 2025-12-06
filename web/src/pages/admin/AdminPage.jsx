@@ -27,5 +27,5 @@ function AuthorizedAdmin() {
     return <GameSettings />;
   }
 
-  return <GamePage />;
+  return <GamePage gameState={gameState} />;
 }

@@ -30,13 +30,30 @@ async def update_player_name(sid: str, data: dict) -> None:
         print(f"AuthId: {auth_id} not found in players")
 
 
+async def clear_player_vote(player_id: str):
+    previous_vote = gamestate.players.data["players"][player_id]["votedFor"]
+    if previous_vote:
+        try:
+            gamestate.players.data["players"][previous_vote]["votes"].remove(player_id)
+        except ValueError:
+            pass
+        gamestate.players.data["players"][player_id]["votedFor"] = None
+
+    gamestate.players.save()
+
+
 @sio.event
-async def kill_player(sid: str, data: dict) -> None:
-    auth_id = data.get("authId")
-    if auth_id in gamestate.players["players"]:
-        gamestate.players["players"][auth_id]["isAlive"] = False
+async def set_player_vitals(sid: str, data: dict) -> None:
+    killer_id = data.get("killerId")
+    target_id = data.get("targetId")
+    alive = data.get("isAlive")
+    if (
+        killer_id in gamestate.players.data["admins"]
+        or gamestate.players.data["players"][killer_id]["game_role"] == "IMPOSTER"
+    ):
+        await clear_player_vote(target_id)
+        gamestate.players.data["players"][target_id]["isAlive"] = alive
         gamestate.players.save()
-        await sio.emit("player_info", gamestate.players["players"][auth_id], to=sid)
-        await sio.emit("players", gamestate.players["players"])
+        await sio.emit("players", gamestate.players.data["players"])
     else:
-        print(f"AuthId: {auth_id} not found in players")
+        print(f"AuthId: {target_id} not found in players")

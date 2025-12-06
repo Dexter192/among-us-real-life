@@ -6,13 +6,16 @@ gamestate = GameState()
 
 
 async def reset_votes():
+    for player in gamestate.players.data["players"].values():
+        player["votes"] = []
+        player["votedFor"] = None
     gamestate.state["votes"] = {}
 
 
 @sio.event
 async def report_dead_body(sid: str) -> None:
     print("Dead body reported by:", sid)
-    reset_votes()
+    await reset_votes()
     gamestate.state["emergency_meeting"] = True
     gamestate.state["endOfMeetingUTC"] = (
         datetime.now()
@@ -32,12 +35,19 @@ async def vote_for_player(sid: str, data: dict) -> None:
     voted_id = data.get("votedId")
     print(f"Player {voter_id} voted for {voted_id}")
 
+    # If voting player is dead, ignore vote
+    if not gamestate.players.data["players"][voter_id]["isAlive"]:
+        print(f"Player {voter_id} is dead, vote not counted.")
+        return
+
+    if not gamestate.players.data["players"][voted_id]["votes"]:
+        gamestate.players.data["players"][voted_id]["votes"] = []
+
     # Remove previous vote if exists
     previous_vote = gamestate.players.data["players"][voter_id]["votedFor"]
     if previous_vote:
-        gamestate.players.data["players"][previous_vote]["votes"] = max(
-            gamestate.players.data["players"][previous_vote]["votes"] - 1, 0
-        )
+        gamestate.players.data["players"][previous_vote]["votes"].remove(voter_id)
+
         # If voted for the same player again
         if previous_vote == voted_id:
             gamestate.players.data["players"][voter_id]["votedFor"] = None
@@ -46,7 +56,7 @@ async def vote_for_player(sid: str, data: dict) -> None:
             return
 
     gamestate.players.data["players"][voter_id]["votedFor"] = voted_id
-    gamestate.players.data["players"][voted_id]["votes"] += 1
+    gamestate.players.data["players"][voted_id]["votes"].append(voter_id)
     gamestate.players.save()
     await sio.emit("players", gamestate.players.data["players"])
 
