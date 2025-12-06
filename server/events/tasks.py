@@ -85,3 +85,21 @@ async def get_tasks(sid: str, data: Any) -> None:
     print("Requesting tasks:", auth_id)
     player_tasks = game_state.players["players"].get(auth_id, {}).get("tasks", [])
     await sio.emit("player_tasks", player_tasks, to=sid)
+
+
+@sio.event
+async def complete_task(sid: str, data: Any) -> None:
+    auth_id = data.get("playerId")
+    task_id = data.get("taskId")
+    players = game_state.players.data.get("players", {})
+    player = players.get(auth_id, {})
+
+    tasks = player.get("tasks", {})
+    task = tasks.get(task_id, None)
+    if task:
+        task["completed"] = not task["completed"]
+        print(f"Player {player['name']} completed task {task['name']} (ID: {task_id})")
+
+        game_state.players.save()
+        await sio.emit("player_tasks", tasks)
+        await sio.emit("task_completed")

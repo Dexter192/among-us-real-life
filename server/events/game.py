@@ -26,13 +26,14 @@ def assign_tasks_to_players():
     tasks_per_player = int(state.config.data.get("tasksPerPlayer"))
 
     for _, player in players.items():
-        player_tasks = []
+        player_tasks = {}
         for _ in range(tasks_per_player):
             task_keys = list(tasks.keys())
             task_id = random.choice(task_keys) if task_keys else None
             if task_id:
                 task = tasks.pop(task_id)
-                player_tasks.append(task)
+                task["completed"] = False
+                player_tasks[task_id] = task
         player["tasks"] = player_tasks
     state.players.save()
 

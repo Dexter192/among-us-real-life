@@ -17,8 +17,10 @@ export default function TaskTab() {
           <Typography>Keine Aufgaben verfügbar.</Typography>
         ) : (
           <Stack spacing={0}>
-            {tasks.map((task) => (
-              <Task key={task.id} task={task} />
+            {Object.entries(tasks).map(([id, task]) => (
+              <>
+                <Task key={id} id={id} task={task} />
+              </>
             ))}
           </Stack>
         )}
