@@ -50,6 +50,18 @@ function GameConfig() {
               fullWidth
             />
             <TextField
+              label="Meeting cooldown (minutes)"
+              value={gameConfig.meetingCooldownMinutes}
+              type="number"
+              onChange={(e) =>
+                updateConfig({
+                  ...gameConfig,
+                  meetingCooldownMinutes: e.target.value,
+                })
+              }
+              fullWidth
+            />
+            <TextField
               label="Kill Cooldown (seconds)"
               value={gameConfig.killCooldownSeconds}
               type="number"

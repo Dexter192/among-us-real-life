@@ -1,9 +1,10 @@
 {
     "numImpostors": "1",
-    "meetingTimeMinutes": "5",
+    "meetingTimeMinutes": "2",
     "killCooldownSeconds": 30,
     "sabotageSeconds": 45,
     "sabotageCharges": 3,
     "tasksPerPlayer": "3",
-    "gameTimeMinutes": "20"
+    "gameTimeMinutes": "20",
+    "meetingCooldownMinutes": "2"
 }

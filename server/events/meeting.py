@@ -14,6 +14,12 @@ async def reset_votes():
 
 @sio.event
 async def report_dead_body(sid: str) -> None:
+    if (
+        datetime.fromisoformat(gamestate.state.get("endOfMeetingCooldownUTC"))
+        > datetime.now()
+    ):
+        print("Meeting cooldown active, cannot report body.")
+        return
     print("Dead body reported by:", sid)
     await reset_votes()
     gamestate.state["emergency_meeting"] = True

@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useSocketConnection } from "./useSocketConnection";
 import { useAuthId } from "./useAuthId";
 
-export function useGetPlayerTasks() {
-  const { authId } = useAuthId();
+export function useGetPlayerTasks(providedAuthId) {
+  const { authId: hookAuthId } = useAuthId();
   const { socket } = useSocketConnection();
+
+  const authId = providedAuthId ?? hookAuthId;
 
   const [tasks, setTasks] = useState(undefined);
 

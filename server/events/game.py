@@ -59,6 +59,10 @@ def initilize_game_state():
         datetime.now()
         + timedelta(minutes=int(state.config.data.get("gameTimeMinutes")))
     ).isoformat()
+    state.state["endOfMeetingCooldownUTC"] = (
+        datetime.now()
+        + timedelta(minutes=int(state.config.data.get("meetingCooldownMinutes")))
+    ).isoformat()
 
 
 async def game_timer():

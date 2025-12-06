@@ -16,7 +16,7 @@ export default function GamePage({ gameState }) {
   return (
     <>
       <GameTimer endTimeUTC={gameState.endOfGameUTC} />
-      <ReportDeadBody />
+      <ReportDeadBody gameState={gameState} />
       <TaskTab />
     </>
   );
