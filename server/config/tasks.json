@@ -17,8 +17,8 @@
             "location": "Cockpit"
         },
         "5": {
-            "name": "Kisses",
-            "location": "Bed"
+            "name": "Empty Chute",
+            "location": "Storage"
         }
     },
     "Default Preset": {
@@ -37,6 +37,10 @@
         "4": {
             "name": "Destroy Astroids",
             "location": "Cockpit"
+        },
+        "5": {
+            "name": "Empty Chute",
+            "location": "Storage"
         }
     },
     "Cuddles": {
@@ -59,6 +63,28 @@
         "5": {
             "name": "Kisses",
             "location": "Bed"
+        }
+    },
+    "Among Us Demo": {
+        "1": {
+            "name": "Swipe Card",
+            "location": "Admin"
+        },
+        "2": {
+            "name": "Fix Wiring",
+            "location": "Electrical"
+        },
+        "3": {
+            "name": "Upload Data",
+            "location": "MedBay"
+        },
+        "4": {
+            "name": "Destroy Astroids",
+            "location": "Cockpit"
+        },
+        "5": {
+            "name": "Empty Chute",
+            "location": "Storage"
         }
     }
 }

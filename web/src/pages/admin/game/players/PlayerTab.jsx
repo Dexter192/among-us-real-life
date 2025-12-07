@@ -1,6 +1,7 @@
 import { useGetPlayers } from "../../../../hooks/useGetPlayers";
 import { useGetPlayerTasks } from "../../../../hooks/useGetPlayerTasks";
 import Player from "./Player";
+import PlayerTask from "./PlayerTask";
 import {
   Box,
   Grid,
@@ -9,14 +10,11 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  List,
-  ListItem,
-  ListItemText,
-  Chip,
   useTheme,
   Card,
   CardActionArea,
   CardContent,
+  Chip,
 } from "@mui/material";
 import { useState, useMemo } from "react";
 import PersonIcon from "@mui/icons-material/Person";
@@ -344,38 +342,7 @@ export default function PlayerTab() {
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                 Tasks
               </Typography>
-              {tasks && Object.keys(tasks).length > 0 ? (
-                <List>
-                  {Object.entries(tasks).map(([taskId, task]) => (
-                    <ListItem
-                      key={taskId}
-                      divider
-                      sx={{ flexDirection: "column", alignItems: "flex-start" }}
-                    >
-                      <ListItemText
-                        primary={task.name}
-                        secondary={
-                          <Chip
-                            label={task.completed ? "Completed" : "Pending"}
-                            size="small"
-                            sx={{
-                              backgroundColor: task.completed
-                                ? "#27ae60"
-                                : "#f39c12",
-                              color: "white",
-                              mt: 1,
-                            }}
-                          />
-                        }
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              ) : (
-                <Typography color="text.secondary" variant="body2">
-                  No tasks assigned.
-                </Typography>
-              )}
+              <PlayerTask playerId={selectedPlayerId} tasks={tasks} />
             </Box>
           </Stack>
         </DialogContent>

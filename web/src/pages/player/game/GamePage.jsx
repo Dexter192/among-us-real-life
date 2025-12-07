@@ -5,9 +5,11 @@ import ReportDeadBody from "../components/ReportDeadBody";
 import EmergencyMeeting from "../../../components/meeting/EmergencyMeeting";
 import ProgressBar from "../../../components/ProgressBar";
 import RoleView from "./role/RoleView";
-import { Divider, Stack } from "@mui/material";
+import { Divider, Stack, Typography } from "@mui/material";
+import { useGetPlayerInfo } from "../../../hooks/useGetPlayerInfo";
 
 export default function GamePage({ gameState }) {
+  const { playerInfo } = useGetPlayerInfo();
   if (gameState.imposter_win || gameState.crewmate_win) {
     return <GameOver gameState={gameState} />;
   }
@@ -18,6 +20,10 @@ export default function GamePage({ gameState }) {
 
   return (
     <>
+      <Typography variant="h4" sx={{ mb: 2 }}>
+        {playerInfo?.name}
+      </Typography>
+      <Divider sx={{ my: 2 }} />
       <GameTimer endTimeUTC={gameState.endOfGameUTC} />
       <Divider sx={{ my: 2 }} />
       <ProgressBar />

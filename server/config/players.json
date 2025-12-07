@@ -1,27 +1,76 @@
 {
     "admins": {
         "gs1wm4ml7xtmirf4jym": {
-            "sid": "gpjkceT4DlG2sPCdAAAJ",
+            "sid": "Dqj0NWWlRz4j7xz5AAAP",
             "role": "ADMIN",
             "tasks": [],
             "name": null,
             "isAlive": true,
             "votes": 0,
             "votedFor": null,
-            "characterId": 3
+            "characterId": 5
         }
     },
     "players": {
-        "252u1ipxd0cmiretmxw": {
-            "sid": "P26gqO_8XAuduAcjAAAH",
+        "ak6jgcwvozmirfkfbq": {
+            "sid": "cNgHUu6S6bQS7JPeAAAJ",
             "role": "PLAYER",
-            "tasks": [],
-            "name": "DevPlayer",
-            "isAlive": true,
-            "votes": 0,
+            "tasks": {
+                "5": {
+                    "name": "Empty Chute",
+                    "location": "Storage",
+                    "completed": false,
+                    "pending": false
+                },
+                "2": {
+                    "name": "Fix Wiring",
+                    "location": "Electrical",
+                    "completed": true,
+                    "pending": false
+                },
+                "3": {
+                    "name": "Upload Data",
+                    "location": "MedBay",
+                    "completed": false,
+                    "pending": false
+                }
+            },
+            "name": "Daniel",
+            "isAlive": false,
+            "votes": [],
             "votedFor": null,
-            "characterId": 0,
-            "game_role": null
+            "characterId": 1,
+            "game_role": "IMPOSTER"
+        },
+        "252u1ipxd0cmiretmxw": {
+            "sid": "Ax8FBJ_nHuM7cNbcAAAN",
+            "role": "PLAYER",
+            "tasks": {
+                "4": {
+                    "name": "Destroy Astroids",
+                    "location": "Cockpit",
+                    "completed": true,
+                    "pending": false
+                },
+                "3": {
+                    "name": "Upload Data",
+                    "location": "MedBay",
+                    "completed": true,
+                    "pending": false
+                },
+                "2": {
+                    "name": "Fix Wiring",
+                    "location": "Electrical",
+                    "completed": true,
+                    "pending": false
+                }
+            },
+            "name": "Kirsten",
+            "isAlive": true,
+            "votes": [],
+            "votedFor": null,
+            "characterId": 3,
+            "game_role": "CREWMATE"
         }
     }
 }

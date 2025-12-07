@@ -162,7 +162,7 @@ async def process_pending_task(sid: str, data: Any) -> None:
     tasks = player.get("tasks", {})
     task = tasks.get(task_id, None)
 
-    if task and task.get("pending", False):
+    if task:
         accept = data.get("accept", False)
         task["completed"] = accept
         task["pending"] = False
@@ -174,6 +174,7 @@ async def process_pending_task(sid: str, data: Any) -> None:
         game_state.players.save()
         player_sid = player.get("sid")
         await sio.emit("player_tasks", tasks, to=player_sid)
+        await sio.emit("player_tasks", tasks, to=sid)
         await sio.emit("pending_tasks", game_state.state["pending_tasks"])
         delay = int(game_state.config.data.get("progressUpdateDelay", 0))
         await total_tasks_completed(sid, delay=delay)
