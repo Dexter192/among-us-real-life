@@ -22,10 +22,10 @@ def reset_player_states():
 
 def assign_tasks_to_players():
     players = state.players.data.get("players", {})
-    tasks = copy.deepcopy(state.tasks.data.get("activeTaskList", {}))
     tasks_per_player = int(state.config.data.get("tasksPerPlayer"))
 
     for _, player in players.items():
+        tasks = copy.deepcopy(state.tasks.data.get("activeTaskList", {}))
         player_tasks = {}
         for _ in range(tasks_per_player):
             task_keys = list(tasks.keys())
@@ -41,8 +41,7 @@ def assign_tasks_to_players():
 def assign_roles_to_players():
     players = state.players.data.get("players", {})
     player_ids = list(players.keys())
-    num_players = len(player_ids)
-    num_imposters = max(1, num_players // 4)
+    num_imposters = int(state.config.data.get("numImpostors"))
 
     imposters = set(random.sample(player_ids, num_imposters))
     for pid in player_ids:
@@ -75,8 +74,8 @@ async def game_timer():
 
             if time_remaining <= 0:
                 state.state["started"] = False
-                state.state["imposter_win"] = False
-                state.state["crewmate_win"] = True
+                state.state["imposter_win"] = True
+                state.state["crewmate_win"] = False
                 await sio.emit("game_state", state.state)
                 break
 
@@ -107,6 +106,26 @@ async def stop_game(sid: str) -> None:
     global game_timer_task
     print("Stopping game:", sid)
     state.state["started"] = False
+    if game_timer_task:
+        game_timer_task.cancel()
+        game_timer_task = None
+    await sio.emit("game_state", state.state)
+
+
+@sio.event
+async def reset_game(sid: str) -> None:
+    global game_timer_task
+    print("Resetting game:", sid)
+    state.state = {
+        "started": False,
+        "imposter_win": False,
+        "crewmate_win": False,
+        "emergency_meeting": False,
+        "votes": {},
+        "endOfGameUTC": None,
+        "endOfMeetingCooldownUTC": None,
+    }
+    reset_player_states()
     if game_timer_task:
         game_timer_task.cancel()
         game_timer_task = None

@@ -1,46 +1,32 @@
-import { useGetPlayers } from "../hooks/useGetPlayers";
 import { Box, LinearProgress, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useSocketConnection } from "../hooks/useSocketConnection";
 
 export default function ProgressBar() {
-  const { players, refetchPlayers } = useGetPlayers();
   const { socket } = useSocketConnection();
   const theme = useTheme();
-  const [showAnimation, setShowAnimation] = useState(false);
   const [prevProgress, setPrevProgress] = useState(0);
+  const [totalTasksCompleted, setTotalTasksCompleted] = useState(0);
+  const [totalTasks, setTotalTasks] = useState(0);
+  const [showAnimation, setShowAnimation] = useState(false);
 
   useEffect(() => {
     if (!socket) return;
 
-    const handleTaskCompleted = () => {
-      refetchPlayers();
+    const handleTaskCompleted = (data) => {
+      setTotalTasksCompleted(data.completed);
+      setTotalTasks(data.total);
     };
-
-    socket.on("task_completed", handleTaskCompleted);
+    socket.emit("total_tasks_completed");
+    socket.on("total_tasks_completed", handleTaskCompleted);
 
     return () => {
-      socket.off("task_completed", handleTaskCompleted);
+      socket.off("total_tasks_completed", handleTaskCompleted);
     };
-  }, [socket, refetchPlayers]);
+  }, [socket]);
 
-  // Calculate tasks and progress
-  const tasks =
-    players && Object.keys(players).length > 0
-      ? Object.values(players).flatMap(
-          (player) => Object.values(player.tasks) || []
-        )
-      : [];
-  const completedTasks = tasks.filter((task) => task.completed).length;
-  const progress = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
-
-  console.log("Progress bar debug:", {
-    playersCount: players ? Object.keys(players).length : 0,
-    totalTasks: tasks.length,
-    completedTasks,
-    progress,
-  });
+  const progress =
+    totalTasks > 0 ? (totalTasksCompleted / totalTasks) * 100 : 0;
 
   useEffect(() => {
     if (progress > prevProgress && prevProgress !== 0) {
@@ -49,11 +35,6 @@ export default function ProgressBar() {
     }
     setPrevProgress(progress);
   }, [progress]);
-
-  // Early return AFTER all hooks
-  if (!players || Object.keys(players).length === 0 || tasks.length === 0) {
-    return null;
-  }
 
   return (
     <Box
@@ -87,7 +68,7 @@ export default function ProgressBar() {
             color: theme.palette.text.secondary,
           }}
         >
-          {completedTasks} / {tasks.length}
+          {totalTasksCompleted} / {totalTasks}
         </Typography>
       </Box>
 

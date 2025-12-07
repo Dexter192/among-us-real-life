@@ -1,14 +1,10 @@
 import { Box, Typography, Stack, TextField } from "@mui/material";
 import { useGetPlayerInfo } from "../../../hooks/useGetPlayerInfo";
-import { useEffect, useState } from "react";
+import { useGetPlayers } from "../../../hooks/useGetPlayers";
 
 export default function PlayerInfo({ gameState }) {
   const { playerInfo, handleNameChange } = useGetPlayerInfo();
-  const [playerCount, setPlayerCount] = useState(null);
-
-  useEffect(() => {
-    setPlayerCount(gameState.player_count);
-  }, [gameState]);
+  const { players } = useGetPlayers();
 
   return (
     <Stack
@@ -46,7 +42,7 @@ export default function PlayerInfo({ gameState }) {
           Spieler in der Lobby
         </Typography>
         <Typography variant="h6" sx={{ color: "white", fontWeight: 700 }}>
-          {playerCount ?? 0}
+          {players ? Object.keys(players).length : 0}
         </Typography>
       </Box>
     </Stack>

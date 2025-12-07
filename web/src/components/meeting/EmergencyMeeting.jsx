@@ -3,6 +3,7 @@ import PlayerCard from "./PlayerCard";
 import MeetingTimer from "../Timer";
 import {
   Box,
+  Button,
   Container,
   Typography,
   Stack,
@@ -11,11 +12,13 @@ import {
 } from "@mui/material";
 import { Gavel } from "@mui/icons-material";
 import { useGetPlayerInfo } from "../../hooks/useGetPlayerInfo";
+import { useEndMeeting } from "../../hooks/useEndMeeting";
 
 export default function EmergencyMeeting({ gameState, isAdmin = false }) {
   const { players } = useGetPlayers();
   const theme = useTheme();
   const { playerInfo } = useGetPlayerInfo();
+  const { endMeeting } = useEndMeeting();
 
   if (players === undefined) {
     return (
@@ -79,6 +82,15 @@ export default function EmergencyMeeting({ gameState, isAdmin = false }) {
             lowTimeThreshold={60000}
           />
         </Box>
+
+        {/* End meetings (admin only) */}
+        {isAdmin && (
+          <Box sx={{ mb: 4, textAlign: "center" }}>
+            <Button variant="contained" color="primary" onClick={endMeeting}>
+              Treffen beenden
+            </Button>
+          </Box>
+        )}
 
         {/* Alive Players */}
         {Object.keys(alive).length > 0 && (

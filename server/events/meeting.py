@@ -88,6 +88,5 @@ def tally_votes():
 async def end_emergency_meeting(sid: str) -> None:
     print("Ending emergency meeting as requested by:", sid)
     gamestate.state["emergency_meeting"] = False
-    gamestate.state["votes"] = {}
-    # Tally votes and eliminate player
+    await reset_votes()
     await sio.emit("game_state", gamestate.state)

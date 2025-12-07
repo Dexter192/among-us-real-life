@@ -11,12 +11,20 @@ export function useGetPlayerTasks(providedAuthId) {
   const [tasks, setTasks] = useState(undefined);
 
   useEffect(() => {
+    if (!socket || !authId) return;
+
     socket.emit("get_tasks", { authId });
 
-    socket.on("player_tasks", (tasks) => {
+    const handlePlayerTasks = (tasks) => {
       console.log("Received tasks:", tasks);
       setTasks(tasks);
-    });
+    };
+
+    socket.on("player_tasks", handlePlayerTasks);
+
+    return () => {
+      socket.off("player_tasks", handlePlayerTasks);
+    };
   }, [socket, authId]);
 
   return { tasks };

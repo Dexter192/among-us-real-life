@@ -24,7 +24,7 @@ function AuthorizedAdmin() {
   }
 
   if (!gameState.started) {
-    return <GameSettings />;
+    return <GameSettings gameState={gameState} />;
   }
 
   return <GamePage gameState={gameState} />;

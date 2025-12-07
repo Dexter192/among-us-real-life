@@ -1,20 +1,20 @@
 import StopGameButton from "./StopGameButton";
 import EmergencyMeeting from "../../../components/meeting/EmergencyMeeting";
-import { useChangePlayerVitals } from "../../../hooks/useChangePlayerVitals";
+import ProgressBar from "../../../components/ProgressBar";
+import GameTimer from "../../../components/Timer";
+import PlayerTab from "./players/PlayerTab";
 
 export default function GamePage({ gameState }) {
-  if (gameState.emergency_meeting) {
-    return (
-      <>
-        <EmergencyMeeting gameState={gameState} isAdmin={true} />
-        <StopGameButton />
-      </>
-    );
-  }
-
   return (
     <>
-      <h1>Game is running</h1>
+      <h1>Admin Page</h1>
+      <GameTimer endTimeUTC={gameState.endOfGameUTC} />
+
+      {gameState.emergency_meeting && (
+        <EmergencyMeeting gameState={gameState} isAdmin={true} />
+      )}
+      <ProgressBar />
+      <PlayerTab gameState={gameState} />
       <StopGameButton />
     </>
   );

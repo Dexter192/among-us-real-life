@@ -1,31 +1,77 @@
 {
-    "admins": {},
+    "admins": {
+        "gs1wm4ml7xtmirf4jym": {
+            "sid": "yUr8XiC404bl4VD1AAAP",
+            "role": "ADMIN",
+            "tasks": [],
+            "name": null,
+            "isAlive": true,
+            "votes": 0,
+            "votedFor": null
+        }
+    },
     "players": {
-        "252u1ipxd0cmiretmxw": {
-            "sid": "rWXZcqHuCVFYOb7VAAAF",
+        "lgujvm26z2miuz0mgg": {
+            "sid": "6FOdChjkMPXGT9tSAAAH",
             "role": "PLAYER",
             "tasks": {
-                "4": {
-                    "name": "Destroy Astroids",
-                    "location": "Cockpit",
-                    "completed": false
+                "2": {
+                    "name": "Fix Wiring",
+                    "location": "Electrical",
+                    "completed": true
                 },
                 "1": {
                     "name": "Swipe Card",
                     "location": "Admin",
+                    "completed": true
+                },
+                "3": {
+                    "name": "Upload Data",
+                    "location": "MedBay",
+                    "completed": true
+                },
+                "4": {
+                    "name": "Destroy Astroids",
+                    "location": "Cockpit",
+                    "completed": true
+                }
+            },
+            "name": "DevPlayer2",
+            "isAlive": false,
+            "votes": [],
+            "votedFor": null,
+            "game_role": "IMPOSTER"
+        },
+        "252u1ipxd0cmiretmxw": {
+            "sid": "McwRx8Vq_e9zy2RiAAAL",
+            "role": "PLAYER",
+            "tasks": {
+                "2": {
+                    "name": "Fix Wiring",
+                    "location": "Electrical",
+                    "completed": true
+                },
+                "4": {
+                    "name": "Destroy Astroids",
+                    "location": "Cockpit",
                     "completed": false
                 },
                 "3": {
                     "name": "Upload Data",
                     "location": "MedBay",
                     "completed": false
+                },
+                "1": {
+                    "name": "Swipe Card",
+                    "location": "Admin",
+                    "completed": true
                 }
             },
             "name": "DevPlayer",
             "isAlive": true,
-            "votes": 0,
+            "votes": [],
             "votedFor": null,
-            "game_role": "IMPOSTER"
+            "game_role": "CREWMATE"
         }
     }
 }

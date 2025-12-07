@@ -9,6 +9,10 @@ export default function StartGameButton() {
     socket.emit("start_game");
   };
 
+  const resetGame = () => {
+    socket.emit("reset_game");
+  };
+
   return (
     <Stack spacing={1} alignItems="center" sx={{ py: 3 }}>
       <Card sx={{ width: "100%", maxWidth: 420, padding: 2 }}>
@@ -17,8 +21,19 @@ export default function StartGameButton() {
           color="primary"
           id="start-game"
           onClick={() => startGame()}
+          sx={{ marginRight: 2 }}
         >
           Start Game
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          id="reset-game"
+          onClick={resetGame}
+          sx={{ marginLeft: 2 }}
+        >
+          Reset Game
         </Button>
       </Card>
     </Stack>

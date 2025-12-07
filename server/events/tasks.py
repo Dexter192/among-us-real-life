@@ -88,6 +88,26 @@ async def get_tasks(sid: str, data: Any) -> None:
 
 
 @sio.event
+async def total_tasks_completed(sid: str) -> None:
+    players = game_state.players.data.get("players", {})
+    tasks = [player.get("tasks", {}) for player in players.values()]
+    completed_tasks = sum(
+        1 for task_list in tasks for task in task_list.values() if task.get("completed")
+    )
+    total_tasks = sum(1 for task_list in tasks for task in task_list.values())
+
+    await sio.emit(
+        "total_tasks_completed", {"total": total_tasks, "completed": completed_tasks}
+    )
+
+    if completed_tasks == total_tasks and total_tasks > 0:
+        game_state.state["started"] = False
+        game_state.state["imposter_win"] = False
+        game_state.state["crewmate_win"] = True
+        await sio.emit("game_state", game_state.state)
+
+
+@sio.event
 async def complete_task(sid: str, data: Any) -> None:
     auth_id = data.get("playerId")
     task_id = data.get("taskId")
@@ -101,5 +121,5 @@ async def complete_task(sid: str, data: Any) -> None:
         print(f"Player {player['name']} completed task {task['name']} (ID: {task_id})")
 
         game_state.players.save()
-        await sio.emit("player_tasks", tasks)
-        await sio.emit("task_completed")
+        await sio.emit("player_tasks", tasks, to=sid)
+        await total_tasks_completed(sid)
