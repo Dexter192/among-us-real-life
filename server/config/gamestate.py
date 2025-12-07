@@ -16,6 +16,7 @@ class GameState:
                 "player_count": 0,
                 "imposter_win": False,
                 "crewmate_win": False,
+                "pending_tasks": {},
             }
             cls._instance.players.reset({"admins": {}, "players": {}})
         return cls._instance

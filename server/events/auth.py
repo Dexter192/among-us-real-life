@@ -1,3 +1,4 @@
+import random
 from typing import Any, Dict
 import os
 from server import sio
@@ -56,6 +57,7 @@ async def perform_login(sid: str, data: Dict[str, Any]) -> None:
         "isAlive": True,
         "votes": 0,
         "votedFor": None,
+        "characterId": random.randint(0, 7),
     }
 
     game_state.state["player_count"] = len(game_state.players["players"])

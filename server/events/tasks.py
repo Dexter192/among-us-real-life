@@ -1,4 +1,6 @@
+import asyncio
 import copy
+import random
 from typing import Any
 from server import sio
 from config.gamestate import GameState
@@ -88,23 +90,37 @@ async def get_tasks(sid: str, data: Any) -> None:
 
 
 @sio.event
-async def total_tasks_completed(sid: str) -> None:
+async def total_tasks_completed(sid: str, delay=0) -> None:
     players = game_state.players.data.get("players", {})
-    tasks = [player.get("tasks", {}) for player in players.values()]
+    tasks = [
+        player.get("tasks", {})
+        for player in players.values()
+        if not player.get("game_role", "") == "IMPOSTER"
+    ]
     completed_tasks = sum(
         1 for task_list in tasks for task in task_list.values() if task.get("completed")
     )
-    total_tasks = sum(1 for task_list in tasks for task in task_list.values())
+    if completed_tasks == 0:
+        delay = 0
 
-    await sio.emit(
-        "total_tasks_completed", {"total": total_tasks, "completed": completed_tasks}
-    )
+    total_tasks = sum(1 for task_list in tasks for task in task_list.values())
 
     if completed_tasks == total_tasks and total_tasks > 0:
         game_state.state["started"] = False
         game_state.state["imposter_win"] = False
         game_state.state["crewmate_win"] = True
         await sio.emit("game_state", game_state.state)
+
+    await asyncio.sleep(random.randint(0, delay))
+    await sio.emit(
+        "total_tasks_completed", {"total": total_tasks, "completed": completed_tasks}
+    )
+
+
+async def sync_player_sids(auth_id: str, sid: str) -> None:
+    if auth_id in game_state.players.data["players"]:
+        game_state.players.data["players"][auth_id]["sid"] = sid
+        game_state.players.save()
 
 
 @sio.event
@@ -116,10 +132,53 @@ async def complete_task(sid: str, data: Any) -> None:
 
     tasks = player.get("tasks", {})
     task = tasks.get(task_id, None)
-    if task:
-        task["completed"] = not task["completed"]
-        print(f"Player {player['name']} completed task {task['name']} (ID: {task_id})")
+    if task and not task.get("completed", False):
+        await sync_player_sids(auth_id, sid)
+        task["pending"] = True
+        print(
+            f"Player {player['name']} ({sid}) completed task {task['name']} (ID: {task_id})"
+        )
+
+        if task_id in game_state.state["pending_tasks"].get(auth_id, {}):
+            return
+        game_state.state["pending_tasks"].setdefault(auth_id, {})[task_id] = task
 
         game_state.players.save()
+        await sio.emit("pending_tasks", game_state.state["pending_tasks"])
         await sio.emit("player_tasks", tasks, to=sid)
-        await total_tasks_completed(sid)
+
+
+@sio.event
+async def process_pending_task(sid: str, data: Any) -> None:
+    auth_id = data.get("authId")
+    if not auth_id in game_state.players.data.get("admins", []):
+        return
+
+    player_id = data.get("playerId")
+    task_id = data.get("taskId")
+    players = game_state.players.data.get("players", {})
+    player = players.get(player_id, {})
+
+    tasks = player.get("tasks", {})
+    task = tasks.get(task_id, None)
+
+    if task and task.get("pending", False):
+        accept = data.get("accept", False)
+        task["completed"] = accept
+        task["pending"] = False
+
+        pending_list = game_state.state["pending_tasks"].get(player_id, {})
+        if task_id in pending_list:
+            pending_list.pop(task_id)
+
+        game_state.players.save()
+        player_sid = player.get("sid")
+        await sio.emit("player_tasks", tasks, to=player_sid)
+        await sio.emit("pending_tasks", game_state.state["pending_tasks"])
+        delay = int(game_state.config.data.get("progressUpdateDelay", 0))
+        await total_tasks_completed(sid, delay=delay)
+
+
+@sio.event
+async def get_pending_tasks(sid: str) -> None:
+    await sio.emit("pending_tasks", game_state.state["pending_tasks"])

@@ -17,6 +17,7 @@ def reset_player_states():
         player["tasks"] = []
         player["votes"] = 0
         player["votedFor"] = None
+        player["characterId"] = random.randint(0, 7)
     state.players.save()
 
 
@@ -33,7 +34,9 @@ def assign_tasks_to_players():
             if task_id:
                 task = tasks.pop(task_id)
                 task["completed"] = False
+                task["pending"] = False
                 player_tasks[task_id] = task
+        # If the player is an imposter, link a sabotage to a task (limited to sabotageCharges). Ensure that all sabotages are unique.
         player["tasks"] = player_tasks
     state.players.save()
 
@@ -124,6 +127,7 @@ async def reset_game(sid: str) -> None:
         "votes": {},
         "endOfGameUTC": None,
         "endOfMeetingCooldownUTC": None,
+        "pending_tasks": {},
     }
     reset_player_states()
     if game_timer_task:

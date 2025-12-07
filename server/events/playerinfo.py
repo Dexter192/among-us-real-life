@@ -8,7 +8,8 @@ gamestate = GameState()
 async def get_player_info(sid: str, data: dict) -> None:
     auth_id = data.get("authId")
     print("Player info requested by:", sid, "for authId:", auth_id)
-    await sio.emit("player_info", gamestate.players["players"][auth_id], to=sid)
+    if auth_id in gamestate.players["players"]:
+        await sio.emit("player_info", gamestate.players["players"][auth_id], to=sid)
 
 
 @sio.event
@@ -47,10 +48,7 @@ async def set_player_vitals(sid: str, data: dict) -> None:
     killer_id = data.get("killerId")
     target_id = data.get("targetId")
     alive = data.get("isAlive")
-    if (
-        killer_id in gamestate.players.data["admins"]
-        or gamestate.players.data["players"][killer_id]["game_role"] == "IMPOSTER"
-    ):
+    if killer_id in gamestate.players.data["admins"]:
         await clear_player_vote(target_id)
         gamestate.players.data["players"][target_id]["isAlive"] = alive
         gamestate.players.save()

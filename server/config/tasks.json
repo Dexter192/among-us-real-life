@@ -15,6 +15,10 @@
         "4": {
             "name": "Destroy Astroids",
             "location": "Cockpit"
+        },
+        "5": {
+            "name": "Kisses",
+            "location": "Bed"
         }
     },
     "Default Preset": {

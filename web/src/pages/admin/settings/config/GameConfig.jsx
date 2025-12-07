@@ -74,11 +74,14 @@ function GameConfig() {
               fullWidth
             />
             <TextField
-              label="Sabotage Duration (seconds)"
-              value={gameConfig.sabotageSeconds}
+              label="Task Progress Update Delay (seconds)"
+              value={gameConfig.progressUpdateDelay}
               type="number"
               onChange={(e) =>
-                updateConfig({ ...gameConfig, sabotageSeconds: e.target.value })
+                updateConfig({
+                  ...gameConfig,
+                  progressUpdateDelay: e.target.value,
+                })
               }
               fullWidth
             />

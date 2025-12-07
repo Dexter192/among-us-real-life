@@ -89,4 +89,8 @@ async def end_emergency_meeting(sid: str) -> None:
     print("Ending emergency meeting as requested by:", sid)
     gamestate.state["emergency_meeting"] = False
     await reset_votes()
+    gamestate.state["endOfMeetingCooldownUTC"] = (
+        datetime.now()
+        + timedelta(minutes=int(gamestate.config.data.get("meetingCooldownMinutes")))
+    ).isoformat()
     await sio.emit("game_state", gamestate.state)

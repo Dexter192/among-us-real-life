@@ -3,8 +3,9 @@
     "meetingTimeMinutes": "2",
     "killCooldownSeconds": 30,
     "sabotageSeconds": 45,
-    "sabotageCharges": 3,
-    "tasksPerPlayer": "4",
-    "gameTimeMinutes": "20",
-    "meetingCooldownMinutes": "0"
+    "progressUpdateDelay": "1",
+    "tasksPerPlayer": "2",
+    "gameTimeMinutes": "90",
+    "meetingCooldownMinutes": "0",
+    "sabotageCharges": "3"
 }

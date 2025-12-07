@@ -4,7 +4,8 @@ import GameOver from "./gameOver/GameOver";
 import ReportDeadBody from "../components/ReportDeadBody";
 import EmergencyMeeting from "../../../components/meeting/EmergencyMeeting";
 import ProgressBar from "../../../components/ProgressBar";
-import { Divider } from "@mui/material";
+import RoleView from "./role/RoleView";
+import { Divider, Stack } from "@mui/material";
 
 export default function GamePage({ gameState }) {
   if (gameState.imposter_win || gameState.crewmate_win) {
@@ -21,7 +22,10 @@ export default function GamePage({ gameState }) {
       <Divider sx={{ my: 2 }} />
       <ProgressBar />
       <Divider sx={{ my: 2 }} />
-      <ReportDeadBody gameState={gameState} />
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <ReportDeadBody gameState={gameState} />
+        <RoleView />
+      </Stack>
       <TaskTab />
     </>
   );
