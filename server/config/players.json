@@ -1,76 +1,69 @@
 {
     "admins": {
         "gs1wm4ml7xtmirf4jym": {
-            "sid": "Dqj0NWWlRz4j7xz5AAAP",
+            "sid": "TydXUL-7Fp1ssbO8AAAB",
             "role": "ADMIN",
             "tasks": [],
             "name": null,
             "isAlive": true,
             "votes": 0,
             "votedFor": null,
-            "characterId": 5
+            "characterId": 7
         }
     },
     "players": {
-        "ak6jgcwvozmirfkfbq": {
-            "sid": "cNgHUu6S6bQS7JPeAAAJ",
-            "role": "PLAYER",
-            "tasks": {
-                "5": {
-                    "name": "Empty Chute",
-                    "location": "Storage",
-                    "completed": false,
-                    "pending": false
-                },
-                "2": {
-                    "name": "Fix Wiring",
-                    "location": "Electrical",
-                    "completed": true,
-                    "pending": false
-                },
-                "3": {
-                    "name": "Upload Data",
-                    "location": "MedBay",
-                    "completed": false,
-                    "pending": false
-                }
-            },
-            "name": "Daniel",
-            "isAlive": false,
-            "votes": [],
-            "votedFor": null,
-            "characterId": 1,
-            "game_role": "IMPOSTER"
-        },
         "252u1ipxd0cmiretmxw": {
-            "sid": "Ax8FBJ_nHuM7cNbcAAAN",
+            "sid": "e0QuYYPBwJQrE-QTAAAL",
             "role": "PLAYER",
             "tasks": {
                 "4": {
                     "name": "Destroy Astroids",
                     "location": "Cockpit",
-                    "completed": true,
-                    "pending": false
-                },
-                "3": {
-                    "name": "Upload Data",
-                    "location": "MedBay",
-                    "completed": true,
-                    "pending": false
+                    "completed": false,
+                    "pending": false,
+                    "linked_sabotage": "2"
                 },
                 "2": {
                     "name": "Fix Wiring",
                     "location": "Electrical",
                     "completed": true,
-                    "pending": false
+                    "pending": false,
+                    "linked_sabotage": "3"
+                },
+                "3": {
+                    "name": "Upload Data",
+                    "location": "MedBay",
+                    "completed": true,
+                    "pending": false,
+                    "linked_sabotage": "4"
                 }
             },
-            "name": "Kirsten",
+            "name": "DevPlayer",
             "isAlive": true,
-            "votes": [],
+            "votes": 0,
             "votedFor": null,
-            "characterId": 3,
-            "game_role": "CREWMATE"
+            "characterId": 0,
+            "game_role": "IMPOSTER",
+            "sabotages": {
+                "3": {
+                    "name": "Test",
+                    "effect": "Resets a task",
+                    "diffuseDescription": "Diffuse description",
+                    "used": true
+                },
+                "4": {
+                    "name": "Sabotage 2",
+                    "effect": "Test",
+                    "diffuseDescription": "asdasdasdasdasdasdasdasdasdasdasdasdasdasd",
+                    "used": true
+                },
+                "2": {
+                    "name": "Test",
+                    "effect": "Effect",
+                    "diffuseDescription": "Description",
+                    "used": false
+                }
+            }
         }
     }
 }

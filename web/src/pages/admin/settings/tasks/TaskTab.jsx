@@ -1,35 +1,38 @@
-import { Card, CardContent, Divider, Stack, Typography } from "@mui/material";
-import TaskList from "./TaskList";
-import AddTask from "./AddTasks";
-import SaveTasksPreset from "./SaveTaskPreset";
-import LoadTaskPreset from "./LoadTaskPreset";
-import { useGetAllTasks } from "../../../../hooks/useGetAllTasks";
-import { useState } from "react";
+import ConfigManagerCard from "../shared/ConfigManagerCard";
+import { useTaskConfig } from "../../../../hooks/useTaskConfig";
 
 export default function TaskTab() {
-  const { tasks } = useGetAllTasks();
-  const [selectedPreset, setSelectedPreset] = useState("");
+  const {
+    data,
+    presets,
+    addItem,
+    deleteItem,
+    savePreset,
+    loadPreset,
+    deletePreset,
+    activeKey,
+  } = useTaskConfig();
 
   return (
-    <Stack spacing={1} alignItems="center" sx={{ py: 3 }}>
-      <Typography variant="overline">Tasks ({selectedPreset})</Typography>
-      <Card sx={{ width: "100%", maxWidth: 420 }}>
-        <CardContent>
-          <TaskList tasks={tasks} />
-          <AddTask />
-          <Divider sx={{ width: "100%" }} />
-          <SaveTasksPreset
-            selectedPreset={selectedPreset}
-            setSelectedPreset={setSelectedPreset}
-          />
-          <Divider sx={{ width: "100%" }} />
-          <LoadTaskPreset
-            tasks={tasks}
-            selectedPreset={selectedPreset}
-            setSelectedPreset={setSelectedPreset}
-          />
-        </CardContent>
-      </Card>
-    </Stack>
+    <ConfigManagerCard
+      title="Tasks"
+      data={data}
+      activeKey={activeKey}
+      presets={presets}
+      onAdd={(name, location, description) =>
+        addItem({ name, location, description })
+      }
+      onDelete={deleteItem}
+      onSavePreset={savePreset}
+      onLoadPreset={loadPreset}
+      onDeletePreset={deletePreset}
+      primaryLabel="Task"
+      secondaryLabel="Location"
+      secondaryKey="location"
+      tertiaryLabel="Description"
+      tertiaryKey="description"
+      addButtonLabel="Add"
+      emptyMessage="No tasks yet."
+    />
   );
 }

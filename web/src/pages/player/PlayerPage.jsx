@@ -3,9 +3,7 @@ import { useSocketConnection } from "../../hooks/useSocketConnection";
 import LobbyPage from "./lobby/LobbyPage";
 import GamePage from "./game/GamePage";
 import PlayerLogin from "./login/PlayerLogin";
-import EmergencyMeeting from "../../components/meeting/EmergencyMeeting";
 import { useState } from "react";
-import { useVoteForPlayer } from "../../hooks/useVoteForPlayer";
 
 export default function PlayerPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);

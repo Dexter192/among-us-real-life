@@ -1,11 +1,11 @@
 {
-    "numImpostors": "1",
+    "numImpostors": "3",
     "meetingTimeMinutes": "2",
     "killCooldownSeconds": 30,
     "sabotageSeconds": 45,
-    "progressUpdateDelay": "10",
+    "progressUpdateDelay": "0",
     "tasksPerPlayer": "3",
-    "gameTimeMinutes": "10",
+    "gameTimeMinutes": "15",
     "meetingCooldownMinutes": "1",
     "sabotageCharges": "3"
 }

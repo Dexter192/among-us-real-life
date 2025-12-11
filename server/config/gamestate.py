@@ -9,6 +9,7 @@ class GameState:
             cls._instance = super().__new__(cls)
             cls._instance.config = JsonStore("server/config/config.json")
             cls._instance.tasks = JsonStore("server/config/tasks.json")
+            cls._instance.sabotages = JsonStore("server/config/sabotages.json")
             cls._instance.players = JsonStore("server/config/players.json")
             cls._instance.state = {
                 "started": False,
@@ -17,6 +18,7 @@ class GameState:
                 "imposter_win": False,
                 "crewmate_win": False,
                 "pending_tasks": {},
+                "sabotage_triggered": False,
             }
             cls._instance.players.reset({"admins": {}, "players": {}})
         return cls._instance

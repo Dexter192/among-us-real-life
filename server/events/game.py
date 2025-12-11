@@ -15,6 +15,7 @@ def reset_player_states():
         player["isAlive"] = True
         player["game_role"] = None
         player["tasks"] = []
+        player["sabotages"] = []
         player["votes"] = 0
         player["votedFor"] = None
         player["characterId"] = random.randint(0, 7)
@@ -24,20 +25,55 @@ def reset_player_states():
 def assign_tasks_to_players():
     players = state.players.data.get("players", {})
     tasks_per_player = int(state.config.data.get("tasksPerPlayer"))
+    task_ids = list(state.tasks.data.get("activeTaskList", {}).keys())
 
     for _, player in players.items():
         tasks = copy.deepcopy(state.tasks.data.get("activeTaskList", {}))
         player_tasks = {}
-        for _ in range(tasks_per_player):
-            task_keys = list(tasks.keys())
-            task_id = random.choice(task_keys) if task_keys else None
-            if task_id:
-                task = tasks.pop(task_id)
-                task["completed"] = False
-                task["pending"] = False
-                player_tasks[task_id] = task
+        assigned_tasks = random.sample(task_ids, min(tasks_per_player, len(task_ids)))
+        for task_id in assigned_tasks:
+            task = tasks[task_id]
+            task["completed"] = False
+            task["pending"] = False
+            player_tasks[task_id] = task
         # If the player is an imposter, link a sabotage to a task (limited to sabotageCharges). Ensure that all sabotages are unique.
         player["tasks"] = player_tasks
+    state.players.save()
+
+
+def assign_sabotages_to_imposters():
+    players = state.players.data.get("players", {})
+    sabotage_charges = int(state.config.data.get("sabotageCharges"))
+    sabotage_ids = list(state.sabotages.data.get("activeSabotageList", {}))
+
+    imposters = [
+        player for player in players.values() if player.get("game_role") == "IMPOSTER"
+    ]
+
+    for imposter in imposters:
+        sabotages = copy.deepcopy(state.sabotages.data.get("activeSabotageList", {}))
+        player_sabotages = {}
+        assigned_sabotages = random.sample(
+            sabotage_ids, min(sabotage_charges, len(sabotage_ids))
+        )
+
+        linked_tasks = random.sample(
+            list(imposter["tasks"].keys()),
+            min(sabotage_charges, len(imposter["tasks"])),
+        )
+        for sabotage_id in assigned_sabotages:
+            # Link sabotage to a task
+            if len(linked_tasks) == 0:
+                break
+            linked_task_id = linked_tasks.pop()
+            imposter["tasks"][linked_task_id]["linked_sabotage"] = sabotage_id
+
+            # Create sabotage entry for imposter
+            sabotage = sabotages[sabotage_id]
+            sabotage["used"] = False
+            player_sabotages[sabotage_id] = sabotage
+
+        imposter["sabotages"] = player_sabotages
     state.players.save()
 
 
@@ -46,7 +82,7 @@ def assign_roles_to_players():
     player_ids = list(players.keys())
     num_imposters = int(state.config.data.get("numImpostors"))
 
-    imposters = set(random.sample(player_ids, num_imposters))
+    imposters = set(random.sample(player_ids, min(num_imposters, len(player_ids))))
     for pid in player_ids:
         players[pid]["game_role"] = "IMPOSTER" if pid in imposters else "CREWMATE"
     state.players.save()
@@ -57,6 +93,8 @@ def initilize_game_state():
     state.state["imposter_win"] = False
     state.state["crewmate_win"] = False
     state.state["emergency_meeting"] = False
+    state.state["sabotageActive"] = False
+    state.state["sabotages"] = state.sabotages.data.get("activeSabotageList", {})
     state.state["votes"] = {}
     state.state["endOfGameUTC"] = (
         datetime.now()
@@ -96,6 +134,7 @@ async def start_game(sid: str) -> None:
     reset_player_states()
     assign_tasks_to_players()
     assign_roles_to_players()
+    assign_sabotages_to_imposters()
     initilize_game_state()
     await sio.emit("game_state", state.state)
 

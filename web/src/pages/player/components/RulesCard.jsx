@@ -24,6 +24,7 @@ export default function RulesCard() {
     "Erfülle Aufgaben um Sabotagen auszulösen.",
     "Verhalte dich unauffällig um nicht entdeckt zu werden.",
     "Wenn du entlarvt wirst, bist du aus dem Spiel.",
+    "Nur eine Sabotage kann gleichzeitig aktiv sein. Wird eine zweite Sabotage ausgelöst, während eine andere noch aktiv läuft, verfällt die zweite.",
   ];
 
   const RuleList = ({ rules, color }) => (

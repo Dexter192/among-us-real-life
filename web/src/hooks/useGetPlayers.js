@@ -19,5 +19,13 @@ export function useGetPlayers() {
     socket.emit("get_players");
   };
 
-  return { players, refetchPlayers };
+  const imposters = players
+    ? Object.fromEntries(
+        Object.entries(players).filter(
+          ([, player]) => player.game_role === "IMPOSTER"
+        )
+      )
+    : {};
+
+  return { players, refetchPlayers, imposters };
 }

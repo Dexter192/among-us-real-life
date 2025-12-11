@@ -1,0 +1,43 @@
+{
+    "activeSabotageList": {
+        "2": {
+            "name": "Test",
+            "effect": "Effect",
+            "diffuseDescription": "Description"
+        },
+        "3": {
+            "name": "Test",
+            "effect": "Resets a task",
+            "diffuseDescription": "Diffuse description"
+        },
+        "4": {
+            "name": "Sabotage 2",
+            "effect": "Test",
+            "diffuseDescription": "asdasdasdasdasdasdasdasdasdasdasdasdasdasd"
+        }
+    },
+    "Test": {
+        "2": {
+            "name": "Test",
+            "effect": "Effect",
+            "diffuseDescription": "Description"
+        },
+        "3": {
+            "name": "Test",
+            "effect": "Resets a task",
+            "diffuseDescription": "Diffuse description"
+        }
+    },
+    "TestActive": {
+        "2": {
+            "name": "Test",
+            "effect": "Effect",
+            "diffuseDescription": "Description"
+        },
+        "3": {
+            "name": "Test",
+            "effect": "Resets a task",
+            "diffuseDescription": "Diffuse description"
+        }
+    }
+}

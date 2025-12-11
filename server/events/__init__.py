@@ -1,4 +1,14 @@
-from . import config, connect, meeting, tasks, game, gamestate, auth, playerinfo
+from . import (
+    config,
+    connect,
+    meeting,
+    tasks,
+    game,
+    gamestate,
+    auth,
+    playerinfo,
+    sabotage,
+)
 
 __all__ = [
     "config",
@@ -9,4 +19,5 @@ __all__ = [
     "auth",
     "playerinfo",
     "meeting",
+    "sabotage",
 ]

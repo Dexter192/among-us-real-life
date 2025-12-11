@@ -4,6 +4,7 @@ import random
 from typing import Any
 from server import sio
 from config.gamestate import GameState
+from events import sabotage
 
 game_state = GameState()
 
@@ -60,7 +61,9 @@ async def load_task_preset(sid: str, data: Any) -> None:
     if data.get("taskSetName"):
         name = data["taskSetName"].strip()
         print(f"Load task preset requested by: {sid} with name: {name}")
-        game_state.tasks.data["activeTaskList"] = game_state.tasks.data.get(name, {})
+        game_state.tasks.data["activeTaskList"] = copy.deepcopy(
+            game_state.tasks.data.get(name, {})
+        )
         game_state.tasks.save()
         await sio.emit("tasks", game_state.tasks.data, to=sid)
     else:
@@ -178,6 +181,7 @@ async def process_pending_task(sid: str, data: Any) -> None:
         await sio.emit("pending_tasks", game_state.state["pending_tasks"])
         delay = int(game_state.config.data.get("progressUpdateDelay", 0))
         await total_tasks_completed(sid, delay=delay)
+        await sabotage.trigger_sabotage_if_needed(player, task)
 
 
 @sio.event

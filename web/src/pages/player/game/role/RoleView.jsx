@@ -2,9 +2,25 @@ import { useState } from "react";
 import { Button, Box, IconButton, Stack, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useGetPlayerInfo } from "../../../../hooks/useGetPlayerInfo";
+import { useGetPlayers } from "../../../../hooks/useGetPlayers";
+import { useAuthId } from "../../../../hooks/useAuthId";
+import ImposterPeer from "./ImposterPeer";
 
 export default function RoleView() {
   const { playerInfo } = useGetPlayerInfo();
+  const { authId } = useAuthId();
+  const { imposters } = useGetPlayers();
+
+  const otherImposters = Object.keys(imposters)
+    .filter((id) => id !== authId)
+    .map((id) => ({ id, ...imposters[id] }))
+    .sort((a, b) => {
+      const aAlive = a.isAlive !== false;
+      const bAlive = b.isAlive !== false;
+      if (aAlive && !bAlive) return -1;
+      if (!aAlive && bAlive) return 1;
+      return 0;
+    });
   const role = playerInfo?.game_role || "UNKNOWN";
   const [showRole, setShowRole] = useState(false);
 
@@ -76,6 +92,20 @@ export default function RoleView() {
               <Typography variant="h6" sx={{ fontWeight: 700 }}>
                 {role}
               </Typography>
+              {playerInfo?.game_role === "IMPOSTER" &&
+                otherImposters.length > 0 && (
+                  <Stack spacing={1} sx={{ width: "100%" }}>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ fontWeight: 600, alignSelf: "flex-start" }}
+                    >
+                      Other Imposters
+                    </Typography>
+                    {otherImposters.map((imp) => (
+                      <ImposterPeer key={imp.id} imposter={imp} />
+                    ))}
+                  </Stack>
+                )}
             </Stack>
           </Box>
         </Box>
