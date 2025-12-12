@@ -12,15 +12,6 @@ services:
       - PYTHONPATH=/app
       - ADMIN_PASSWORD=CHANGE_ME
       - PLAYER_PASSWORD=CHANGE_ME
-    volumes:
-      - ../server:/app/server
-      - ../server/config:/app/server/config
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     restart: unless-stopped
     networks:
       - among-us-network
