@@ -7,10 +7,10 @@ class GameState:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.config = JsonStore("server/config/config.json")
-            cls._instance.tasks = JsonStore("server/config/tasks.json")
-            cls._instance.sabotages = JsonStore("server/config/sabotages.json")
-            cls._instance.players = JsonStore("server/config/players.json")
+            cls._instance.config = JsonStore("server/data/config.json")
+            cls._instance.tasks = JsonStore("server/data/tasks.json")
+            cls._instance.sabotages = JsonStore("server/data/sabotages.json")
+            cls._instance.players = JsonStore("server/data/players.json")
             cls._instance.state = {
                 "started": False,
                 "endOfGameUTC": 0,

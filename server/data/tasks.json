@@ -1,0 +1,21 @@
+{
+    "activeTaskList": {
+        "1": {
+            "name": "Fix Wiring",
+            "location": "Electrical",
+            "description": "Connect the cables to the correct colours"
+        },
+        "2": {
+            "name": "Clear Astroids",
+            "location": "Weapons",
+            "description": "Shoot paper pieces to knock astroids off the table"
+        }
+    },
+    "Among Us Default": {
+        "1": {
+            "name": "Fix Wiring",
+            "location": "Electrical",
+            "description": "Connect the cables to the correct colours"
+        }
+    }
+}

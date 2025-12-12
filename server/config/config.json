@@ -1,9 +1,0 @@
-{
-  "numImpostors": "1",
-  "meetingTimeMinutes": "2",
-  "progressUpdateDelay": "0",
-  "tasksPerPlayer": "2",
-  "gameTimeMinutes": "15",
-  "meetingCooldownMinutes": "0",
-  "sabotageCharges": "1"
-}

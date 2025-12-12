@@ -1,0 +1,34 @@
+{
+    "activeSabotageList": {
+        "1": {
+            "name": "Reset Task",
+            "effect": "Resets a random task for each player",
+            "diffuseDescription": "",
+            "timerSeconds": 0,
+            "dismissByPlayer": true
+        },
+        "2": {
+            "name": "Lock front door",
+            "effect": "Lock access to the lower deck",
+            "diffuseDescription": "Stop a stopwatch at exactly 2 seconds to reopen the door",
+            "timerSeconds": 0,
+            "dismissByPlayer": false
+        }
+    },
+    "Sabotages": {
+        "1": {
+            "name": "Reset Task",
+            "effect": "Resets a random task for each player",
+            "diffuseDescription": "",
+            "timerSeconds": 0,
+            "dismissByPlayer": true
+        },
+        "2": {
+            "name": "Lock front door",
+            "effect": "Lock access to the lower deck",
+            "diffuseDescription": "Stop a stopwatch at exactly 2 seconds to reopen the door",
+            "timerSeconds": 0,
+            "dismissByPlayer": false
+        }
+    }
+}

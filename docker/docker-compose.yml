@@ -13,7 +13,7 @@ services:
       - ADMIN_PASSWORD=CHANGE_ME
       - PLAYER_PASSWORD=CHANGE_ME
     volumes:
-      - ../server/config:/app/server/config
+      - ./data:/app/server/config
     restart: unless-stopped
     networks:
       - among-us-network
