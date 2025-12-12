@@ -5,9 +5,10 @@ import ReportDeadBody from "../components/ReportDeadBody";
 import EmergencyMeeting from "../../../components/meeting/EmergencyMeeting";
 import ProgressBar from "../../../components/ProgressBar";
 import RoleView from "./role/RoleView";
-import { Divider, Stack, Typography } from "@mui/material";
+import { Divider, Stack, Typography, Card, Box, Alert } from "@mui/material";
 import { useGetPlayerInfo } from "../../../hooks/useGetPlayerInfo";
 import SabotageBanner from "./sabotage/SabotageBanner";
+import DeadBanner from "./gameOver/DeadBanner";
 
 export default function GamePage({ gameState }) {
   const { playerInfo } = useGetPlayerInfo();
@@ -21,6 +22,7 @@ export default function GamePage({ gameState }) {
   }
 
   console.log("Gamestate in GamePage:", gameState);
+
   return (
     <>
       <Typography variant="h4" sx={{ mb: 2 }}>
@@ -32,10 +34,13 @@ export default function GamePage({ gameState }) {
       <ProgressBar />
       <Divider sx={{ my: 2 }} />
       <SabotageBanner gameState={gameState} />
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <ReportDeadBody gameState={gameState} />
-        <RoleView />
-      </Stack>
+      <DeadBanner playerInfo={playerInfo} />
+      {playerInfo?.isAlive && (
+        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+          <ReportDeadBody gameState={gameState} />
+          <RoleView />
+        </Stack>
+      )}
       <TaskTab />
     </>
   );

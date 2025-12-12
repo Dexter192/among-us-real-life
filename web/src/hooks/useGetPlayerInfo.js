@@ -21,6 +21,10 @@ export function useGetPlayerInfo() {
     socket.emit("get_player_info", { authId });
   };
 
+  socket.on("trigger_player_refresh", () => {
+    refetchPlayerInfo();
+  });
+
   const handleNameChange = (event) => {
     const newName = event.target.value;
     setPlayerInfo({ ...playerInfo, name: newName });

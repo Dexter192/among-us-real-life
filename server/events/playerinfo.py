@@ -53,5 +53,6 @@ async def set_player_vitals(sid: str, data: dict) -> None:
         gamestate.players.data["players"][target_id]["isAlive"] = alive
         gamestate.players.save()
         await sio.emit("players", gamestate.players.data["players"])
+        await sio.emit("trigger_player_refresh")
     else:
         print(f"AuthId: {target_id} not found in players")

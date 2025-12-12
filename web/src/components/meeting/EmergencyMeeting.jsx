@@ -13,6 +13,7 @@ import {
 import { Gavel } from "@mui/icons-material";
 import { useGetPlayerInfo } from "../../hooks/useGetPlayerInfo";
 import { useEndMeeting } from "../../hooks/useEndMeeting";
+import DeadBanner from "../../pages/player/game/gameOver/DeadBanner";
 
 export default function EmergencyMeeting({ gameState, isAdmin = false }) {
   const { players } = useGetPlayers();
@@ -62,11 +63,7 @@ export default function EmergencyMeeting({ gameState, isAdmin = false }) {
               Notfall-Treffen
             </Typography>
           </Stack>
-          {!playerInfo?.isAlive && (
-            <Typography variant="body1" color="text.secondary">
-              Du bist tot und kannst nicht abstimmen.
-            </Typography>
-          )}
+          <DeadBanner playerInfo={playerInfo} />
           {playerInfo?.isAlive && (
             <Typography variant="body1" color="text.secondary">
               Besprecht euch und versucht, einen Imposter aus dem Spiel zu
