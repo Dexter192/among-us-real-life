@@ -1,0 +1,160 @@
+import { useGetPlayers } from "../../hooks/useGetPlayers";
+import PlayerCard from "./PlayerCard";
+import MeetingTimer from "../Timer";
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  Stack,
+  Divider,
+  useTheme,
+} from "@mui/material";
+import { Gavel } from "@mui/icons-material";
+import { useGetPlayerInfo } from "../../hooks/useGetPlayerInfo";
+import { useEndMeeting } from "../../hooks/useEndMeeting";
+import DeadBanner from "../../pages/player/game/gameOver/DeadBanner";
+
+export default function EmergencyMeeting({ gameState, isAdmin = false }) {
+  const { players } = useGetPlayers();
+  const theme = useTheme();
+  const { playerInfo } = useGetPlayerInfo();
+  const { endMeeting } = useEndMeeting();
+
+  if (players === undefined) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <Typography>Lade Spieler...</Typography>
+      </Box>
+    );
+  }
+
+  const alive = Object.fromEntries(
+    Object.entries(players).filter(([_, p]) => p.isAlive)
+  );
+  const dead = Object.fromEntries(
+    Object.entries(players).filter(([_, p]) => !p.isAlive)
+  );
+
+  return (
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", py: 3 }}>
+      <Container maxWidth="lg">
+        {/* Header */}
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            spacing={1}
+            sx={{ mb: 2 }}
+          >
+            <Gavel sx={{ fontSize: 40, color: theme.palette.primary.main }} />
+            <Typography
+              variant="h3"
+              sx={{ fontWeight: 700, color: theme.palette.primary.main }}
+            >
+              Notfall-Treffen
+            </Typography>
+          </Stack>
+          <DeadBanner playerInfo={playerInfo} />
+          {playerInfo?.isAlive && (
+            <Typography variant="body1" color="text.secondary">
+              Besprecht euch und versucht, einen Imposter aus dem Spiel zu
+              werfen!
+            </Typography>
+          )}
+        </Box>
+
+        {/* Timer */}
+        <Box sx={{ mb: 3 }}>
+          <MeetingTimer
+            endTimeUTC={gameState.endOfMeetingUTC}
+            lowTimeThreshold={60000}
+          />
+        </Box>
+
+        {/* End meetings (admin only) */}
+        {isAdmin && (
+          <Box sx={{ mb: 4, textAlign: "center" }}>
+            <Button variant="contained" color="primary" onClick={endMeeting}>
+              Treffen beenden
+            </Button>
+          </Box>
+        )}
+
+        {/* Alive Players */}
+        {Object.keys(alive).length > 0 && (
+          <Box sx={{ mb: 4 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                mb: 2,
+                color: theme.palette.success.main,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              Lebende Spieler ({Object.keys(alive).length})
+            </Typography>
+            <Stack spacing={2}>
+              {Object.entries(alive).map(([id, player]) => (
+                <PlayerCard
+                  key={id}
+                  id={id}
+                  player={player}
+                  isAlive={true}
+                  players={players}
+                  isAdmin={isAdmin}
+                />
+              ))}
+            </Stack>
+          </Box>
+        )}
+
+        {/* Divider */}
+        {Object.keys(alive).length > 0 && Object.keys(dead).length > 0 && (
+          <Divider sx={{ my: 3 }} />
+        )}
+
+        {/* Dead Players */}
+        {Object.keys(dead).length > 0 && (
+          <Box>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                mb: 2,
+                color: theme.palette.error.main,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              Tote Spieler ({Object.keys(dead).length})
+            </Typography>
+            <Stack spacing={2}>
+              {Object.entries(dead).map(([id, player]) => (
+                <PlayerCard
+                  key={id}
+                  id={id}
+                  player={player}
+                  isAlive={false}
+                  isAdmin={isAdmin}
+                />
+              ))}
+            </Stack>
+          </Box>
+        )}
+      </Container>
+    </Box>
+  );
+}

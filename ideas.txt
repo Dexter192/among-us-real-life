@@ -1,0 +1,44 @@
+TODO: 
+Handle players joining late
+On start, assign tasks to players
+Admin confirm task
+Killing(?)
+Separation imposter and player 
+
+Save socket id in cookie to restore session on reload
+Think about how to deal with disconnecting clients. Do tasks count as completed? Are they stashed
+What happens when imposter leaves?
+
+Extract Socket connection to a util singleton file or something similar.
+
+Features:
+ - Admin control panel
+ - Admin "confirm task" block
+ - Imposter
+ - Figure out a good way to kill someone
+ - Crewmate
+ - Sketch out how to kill without easy identification
+
+Assign random names to players
+Complete task requires admin confirmation
+
+Rework structure as a whole / better to rewrite from scratch tbh
+
+
+Vite + React + Socket
+
+pages
+ - admin
+   - Imposter management
+   - Task management
+ - player
+   - Tasks (look as cards, not checkbox)
+
+
+
+Write two cards next to each other using @mui which very briefly describe the rules of AmongUs in germand to players:
+
+The first card for crewmates should include at least:
+- Aufgaben werden bei Spielstart verteilt
+- Erfüllt alle Aufgaben um zu gewinnen
+- 
