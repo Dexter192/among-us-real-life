@@ -1,0 +1,51 @@
+services:
+  # Backend Socket.IO Service
+  among-us-backend:
+    image: ghcr.io/dexter192/among-us-backend:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    container_name: among-us-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONPATH=/app
+      - ADMIN_PASSWORD=CHANGE_ME
+      - PLAYER_PASSWORD=CHANGE_ME
+    volumes:
+      - ../server:/app/server
+      - ../server/config:/app/server/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - among-us-network
+
+  # Frontend React/Vite Service
+  among-us-frontend:
+    image: ghcr.io/dexter192/among-us-frontend:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+      args:
+        VITE_SOCKET_URL: ""
+        VITE_SOCKET_PATH: "/api/socket.io"
+    environment:
+      BACKEND_URL: http://among-us-backend:5000
+      FRONTEND_PORT: 80
+    container_name: among-us-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - among-us-backend
+    networks:
+      - among-us-network
+    restart: unless-stopped
+
+networks:
+  among-us-network:
+    driver: bridge

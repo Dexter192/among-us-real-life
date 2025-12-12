@@ -8,7 +8,10 @@ let connectionCount = 0;
 function getOrCreateSocket(isAdmin, authId) {
   if (!socketInstance) {
     const role = isAdmin ? "ADMIN" : "PLAYER";
-    socketInstance = io("http://localhost:4046", {
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || undefined;
+    const socketPath = import.meta.env.VITE_SOCKET_PATH || "/api/socket.io";
+    socketInstance = io(socketUrl, {
+      path: socketPath,
       transports: ["websocket"],
       auth: {
         role: role,

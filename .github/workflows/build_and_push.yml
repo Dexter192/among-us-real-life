@@ -1,0 +1,62 @@
+name: "Publish Docker image to GHCR"
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        description: The version tag to use for the Docker image (e.g., v0.0.1)
+        required: true
+        type: string
+
+jobs:
+  push_to_registry:
+    runs-on: "ubuntu-latest"
+    name: Build and Push Docker Images to GHCR
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - name: Checkout repo
+        uses: "actions/checkout@v5"
+
+      # Login to GHCR
+      - name: Login to GitHub Container Registry
+        uses: "docker/login-action@v2"
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Add version tag for release events
+      - name: Set up version tag
+        if: github.event_name == 'release'
+        run: |
+          echo "VERSION_TAG=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+
+      # Add version tag for manual trigger
+      - name: Set up version tag for manual trigger
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "VERSION_TAG=${{ github.event.inputs.version_tag }}" >> $GITHUB_ENV
+
+      # Build and push backend image
+      - name: Build and push Among Us Backend image
+        uses: "docker/build-push-action@v4"
+        with:
+          context: .
+          file: docker/Dockerfile.backend
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/among-us-backend:latest, ghcr.io/${{ github.repository_owner }}/among-us-backend:${{ env.VERSION_TAG }}
+
+      - name: Build and push Among Us Frontend image
+        uses: "docker/build-push-action@v4"
+        with:
+          context: .
+          file: docker/Dockerfile.frontend
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/among-us-frontend:latest, ghcr.io/${{ github.repository_owner }}/among-us-frontend:${{ env.VERSION_TAG }}
