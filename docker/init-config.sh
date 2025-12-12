@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-CONFIG_DST=/app/server/config
+CONFIG_DST=/app/server/data
 
 mkdir -p "$CONFIG_DST"
 
