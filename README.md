@@ -4,9 +4,7 @@ A full-stack web application for playing Among Us in real life with Socket.IO-ba
 
 ## Demo
 
-<video width="320" height="240" controls>
-  <source src="demo/amongus_demo.mp4" type="video/mp4">
-</video>
+[Watch Demo Video](demo/amongus_demo.mp4)
 
 
 ## Features
