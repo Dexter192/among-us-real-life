@@ -15,11 +15,11 @@ if [ ! -f "$CONFIG_DST/players.json" ]; then
 fi
 
 if [ ! -f "$CONFIG_DST/sabotages.json" ]; then
-  echo '[]' > "$CONFIG_DST/sabotages.json"
+  echo '{"activeSabotageList": {}}' > "$CONFIG_DST/sabotages.json"
 fi
 
 if [ ! -f "$CONFIG_DST/tasks.json" ]; then
-  echo '[]' > "$CONFIG_DST/tasks.json"
+  echo '{"activeTaskList": {}}' > "$CONFIG_DST/tasks.json"
 fi
 
 exec "$@"
