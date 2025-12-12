@@ -187,3 +187,35 @@ async def process_pending_task(sid: str, data: Any) -> None:
 @sio.event
 async def get_pending_tasks(sid: str) -> None:
     await sio.emit("pending_tasks", game_state.state["pending_tasks"])
+
+
+@sio.event
+async def reset_n_tasks(sid: str, data: Any) -> None:
+    num_tasks = data.get("numTasks", 0)
+
+    # Sort by players with most completed tasks
+    players = sorted(
+        game_state.players.data.get("players", {}).items(),
+        key=lambda item: sum(
+            1 for task in item[1].get("tasks", {}).values() if task.get("completed")
+        ),
+        reverse=True,
+    )
+    resetted_count = 0
+    for _, player in players:
+        tasks = player.get("tasks", {})
+        completed_tasks = [
+            task_id
+            for task_id, task in tasks.items()
+            if task.get("completed") and num_tasks > 0
+        ]
+        if len(completed_tasks) == 0:
+            continue
+        resetted_count += 1
+        if resetted_count > num_tasks:
+            break
+        task_id = random.choice(completed_tasks)
+        tasks[task_id]["completed"] = False
+
+    game_state.players.save()
+    await sio.emit("trigger_task_update")

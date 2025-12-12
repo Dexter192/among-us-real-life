@@ -7,6 +7,11 @@ export function useGetActiveSabotage(sabotageTriggered) {
   const [sabotage, setSabotage] = useState(undefined);
 
   useEffect(() => {
+    if (!sabotageTriggered) {
+      setSabotage(undefined);
+      return;
+    }
+
     if (socket === null) return;
 
     socket.emit("get_active_sabotage");

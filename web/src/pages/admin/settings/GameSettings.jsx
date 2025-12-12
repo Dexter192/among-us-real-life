@@ -1,5 +1,5 @@
 import GameConfig from "./config/GameConfig.jsx";
-import StartGameButton from "./StartGameButton.jsx";
+import GameActions from "./GameActions.jsx";
 import TaskTab from "./tasks/TaskTab.jsx";
 import SabotageTab from "./sabotages/SabotageTab.jsx";
 import PlayerTab from "./players/PlayerTab.jsx";
@@ -14,7 +14,7 @@ export default function GameSettings({ gameState }) {
       <TaskTab />
       <SabotageTab />
       <PlayerTab />
-      <StartGameButton />
+      <GameActions />
     </>
   );
 }

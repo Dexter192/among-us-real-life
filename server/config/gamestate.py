@@ -18,7 +18,8 @@ class GameState:
                 "imposter_win": False,
                 "crewmate_win": False,
                 "pending_tasks": {},
-                "sabotage_triggered": False,
+                "sabotage_triggered": None,
+                "sabotageEndUTC": None,
             }
             cls._instance.players.reset({"admins": {}, "players": {}})
         return cls._instance

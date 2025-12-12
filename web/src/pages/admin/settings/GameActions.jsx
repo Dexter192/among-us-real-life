@@ -1,8 +1,8 @@
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useSocketConnection } from "../../../hooks/useSocketConnection";
 import { Stack, Card } from "@mui/material";
 
-export default function StartGameButton() {
+export default function GameActions() {
   const { socket } = useSocketConnection();
 
   const startGame = () => {

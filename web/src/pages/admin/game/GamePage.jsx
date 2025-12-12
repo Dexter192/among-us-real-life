@@ -1,4 +1,4 @@
-import StopGameButton from "./StopGameButton";
+import StopGameButton from "./GameActions";
 import EmergencyMeeting from "../../../components/meeting/EmergencyMeeting";
 import ProgressBar from "../../../components/ProgressBar";
 import GameTimer from "../../../components/Timer";
@@ -6,6 +6,7 @@ import PlayerTab from "./players/PlayerTab";
 import PendingTaskList from "./tasks/PendingTaskList";
 import SabotageInfo from "./sabotage/SabotageInfo";
 import { Box, Divider, Typography } from "@mui/material";
+import GameActions from "./GameActions";
 
 export default function GamePage({ gameState }) {
   return (
@@ -35,7 +36,7 @@ export default function GamePage({ gameState }) {
         <Typography variant="h6" sx={{ mb: 2, color: "#e74c3c" }}>
           Danger Zone
         </Typography>
-        <StopGameButton />
+        <GameActions />
       </Box>
     </>
   );

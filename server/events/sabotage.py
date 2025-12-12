@@ -1,5 +1,6 @@
 import copy
 from typing import Any
+from datetime import datetime, timedelta
 
 from server import sio
 from config.gamestate import GameState
@@ -28,12 +29,25 @@ async def get_active_sabotage(sid: str) -> None:
     if not sabotage:
         return
 
-    await sio.emit("active_sabotage", {"id": id, **sabotage}, to=sid)
+    await sio.emit(
+        "active_sabotage",
+        {"id": id, **sabotage},
+        to=sid,
+    )
 
 
 @sio.event
 async def add_sabotage(sid: str, sabotage_data: Any) -> None:
     if sabotage_data.get("name"):
+        timer_seconds = sabotage_data.get("timerSeconds")
+        if timer_seconds is not None:
+            try:
+                sabotage_data["timerSeconds"] = int(timer_seconds)
+            except (TypeError, ValueError):
+                sabotage_data["timerSeconds"] = None
+        sabotage_data["dismissByPlayer"] = bool(
+            sabotage_data.get("dismissByPlayer", False)
+        )
         sabotage_list = game_state.sabotages.data.setdefault("activeSabotageList", {})
         new_id = max([int(k) for k in sabotage_list.keys()] or [0]) + 1
         sabotage_list[str(new_id)] = sabotage_data
@@ -121,6 +135,13 @@ async def trigger_sabotage_if_needed(player: dict, task: dict) -> None:
     )
     player["sabotages"][sabotage_id]["used"] = True
     game_state.state["sabotage_triggered"] = sabotage_id
+    timer_seconds = sabotage.get("timerSeconds")
+    if timer_seconds:
+        sabotage["sabotageEndUTC"] = (
+            datetime.now() + timedelta(seconds=int(timer_seconds))
+        ).isoformat()
+    else:
+        sabotage["sabotageEndUTC"] = None
     game_state.players.save()
     await sio.emit("game_state", game_state.state)
 
@@ -128,9 +149,23 @@ async def trigger_sabotage_if_needed(player: dict, task: dict) -> None:
 @sio.event
 async def diffuse_sabotage(sid: str, sabotage_id: str) -> None:
     print(f"Diffuse sabotage requested by: {sid} for sabotage id: {sabotage_id}")
-    if game_state.state.get("sabotage_triggered") == sabotage_id:
-        game_state.state["sabotage_triggered"] = None
-        game_state.sabotages.save()
-        await sio.emit("game_state", game_state.state)
-    else:
+    if game_state.state.get("sabotage_triggered") != sabotage_id:
         print(f"Sabotage id: {sabotage_id} is not currently active.")
+        return
+
+    # Permission check: only allow player dismissal if configured, otherwise require admin sid
+    active_sabotage = game_state.state.get("sabotages", {}).get(sabotage_id, {})
+    dismiss_by_player = active_sabotage.get("dismissByPlayer", False)
+    if not dismiss_by_player:
+        admin_sids = {
+            admin_info.get("sid")
+            for admin_info in game_state.players.data.get("admins", {}).values()
+        }
+        if sid not in admin_sids:
+            print("Dismiss blocked: player is not allowed to diffuse this sabotage.")
+            return
+
+    game_state.state["sabotage_triggered"] = None
+    game_state.state["sabotageEndUTC"] = None
+    game_state.sabotages.save()
+    await sio.emit("game_state", game_state.state)

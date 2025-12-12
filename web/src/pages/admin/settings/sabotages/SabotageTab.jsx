@@ -19,9 +19,25 @@ export default function SabotageTab() {
       data={data}
       activeKey={activeKey}
       presets={presets}
-      onAdd={(name, effect, diffuseDescription) =>
-        addItem({ name, effect, diffuseDescription })
-      }
+      onAdd={(
+        name,
+        effect,
+        diffuseDescription,
+        timerSecondsInput,
+        dismissByPlayer
+      ) => {
+        const parsedTimer = Number(timerSecondsInput);
+        const timerSeconds = Number.isFinite(parsedTimer)
+          ? Math.max(0, parsedTimer)
+          : 0;
+        addItem({
+          name,
+          effect,
+          diffuseDescription,
+          timerSeconds,
+          dismissByPlayer: Boolean(dismissByPlayer),
+        });
+      }}
       onDelete={deleteItem}
       onSavePreset={savePreset}
       onLoadPreset={loadPreset}
@@ -31,6 +47,11 @@ export default function SabotageTab() {
       secondaryKey="effect"
       tertiaryLabel="Diffuse Description"
       tertiaryKey="diffuseDescription"
+      quaternaryLabel="Timer (seconds)"
+      quaternaryKey="timerSeconds"
+      quaternaryType="number"
+      booleanLabel="Dismissible by players"
+      booleanKey="dismissByPlayer"
       addButtonLabel="Add"
       emptyMessage="No sabotages yet."
     />

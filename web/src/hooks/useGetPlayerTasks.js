@@ -22,6 +22,10 @@ export function useGetPlayerTasks(providedAuthId) {
 
     socket.on("player_tasks", handlePlayerTasks);
 
+    socket.on("trigger_task_update", () => {
+      socket.emit("get_tasks", { authId });
+    });
+
     return () => {
       socket.off("player_tasks", handlePlayerTasks);
     };

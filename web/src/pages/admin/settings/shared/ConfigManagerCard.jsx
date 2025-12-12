@@ -19,6 +19,11 @@ export default function ConfigManagerCard({
   secondaryKey,
   tertiaryLabel,
   tertiaryKey,
+  quaternaryLabel,
+  quaternaryKey,
+  quaternaryType,
+  booleanLabel,
+  booleanKey,
   addButtonLabel = "Add",
   emptyMessage = "No items yet.",
 }) {
@@ -51,12 +56,19 @@ export default function ConfigManagerCard({
             onDelete={onDelete}
             secondaryKey={secondaryKey}
             tertiaryKey={tertiaryKey}
+            quaternaryKey={quaternaryKey}
+            quaternaryLabel={quaternaryLabel}
+            booleanKey={booleanKey}
+            booleanLabel={booleanLabel}
           />
 
           <ConfigAddForm
             primaryLabel={primaryLabel}
             secondaryLabel={secondaryLabel}
             tertiaryLabel={tertiaryLabel}
+            quaternaryLabel={quaternaryLabel}
+            quaternaryType={quaternaryType}
+            booleanLabel={booleanLabel}
             addButtonLabel={addButtonLabel}
             onAdd={onAdd}
           />

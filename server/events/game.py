@@ -93,6 +93,8 @@ def initilize_game_state():
     state.state["imposter_win"] = False
     state.state["crewmate_win"] = False
     state.state["emergency_meeting"] = False
+    state.state["sabotage_triggered"] = None
+    state.state["sabotageEndUTC"] = None
     state.state["sabotageActive"] = False
     state.state["sabotages"] = state.sabotages.data.get("activeSabotageList", {})
     state.state["votes"] = {}
@@ -148,6 +150,8 @@ async def stop_game(sid: str) -> None:
     global game_timer_task
     print("Stopping game:", sid)
     state.state["started"] = False
+    state.state["sabotage_triggered"] = None
+    state.state["sabotageEndUTC"] = None
     if game_timer_task:
         game_timer_task.cancel()
         game_timer_task = None
@@ -167,11 +171,31 @@ async def reset_game(sid: str) -> None:
         "endOfGameUTC": None,
         "endOfMeetingCooldownUTC": None,
         "pending_tasks": {},
+        "sabotage_triggered": None,
+        "sabotageEndUTC": None,
     }
     reset_player_states()
     if game_timer_task:
         game_timer_task.cancel()
         game_timer_task = None
+    await sio.emit("game_state", state.state)
+
+
+@sio.event
+async def trigger_imposter_win(sid: str) -> None:
+    print("Triggering imposter win:", sid)
+    state.state["started"] = False
+    state.state["imposter_win"] = True
+    state.state["crewmate_win"] = False
+    await sio.emit("game_state", state.state)
+
+
+@sio.event
+async def trigger_crewmate_win(sid: str) -> None:
+    print("Triggering crewmate win:", sid)
+    state.state["started"] = False
+    state.state["imposter_win"] = False
+    state.state["crewmate_win"] = True
     await sio.emit("game_state", state.state)
 
 
