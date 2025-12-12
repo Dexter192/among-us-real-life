@@ -51,7 +51,7 @@ jobs:
           context: .
           file: docker/Dockerfile.backend
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/among-us-backend:latest, ghcr.io/${{ github.repository_owner }}/among-us-backend:${{ env.VERSION_TAG }}
+          tags: ghcr.io/dexter192/among-us-backend:latest, ghcr.io/dexter192/among-us-backend:${{ env.VERSION_TAG }}
 
       - name: Build and push Among Us Frontend image
         uses: "docker/build-push-action@v4"
@@ -59,4 +59,4 @@ jobs:
           context: .
           file: docker/Dockerfile.frontend
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/among-us-frontend:latest, ghcr.io/${{ github.repository_owner }}/among-us-frontend:${{ env.VERSION_TAG }}
+          tags: ghcr.io/dexter192/among-us-frontend:latest, ghcr.io/dexter192/among-us-frontend:${{ env.VERSION_TAG }}
