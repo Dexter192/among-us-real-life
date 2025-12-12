@@ -27,5 +27,11 @@ EXPOSE 5000
 
 
 
+# Copy init script and set entrypoint to ensure config files exist in mounted volume
+COPY docker/init-config.sh /init-config.sh
+RUN chmod +x /init-config.sh
+
+ENTRYPOINT ["/init-config.sh"]
+
 # Start the Socket.IO server
 CMD ["python", "server/main.py"]
