@@ -62,18 +62,6 @@ function GameConfig() {
               fullWidth
             />
             <TextField
-              label="Kill Cooldown (seconds)"
-              value={gameConfig.killCooldownSeconds}
-              type="number"
-              onChange={(e) =>
-                updateConfig({
-                  ...gameConfig,
-                  killCooldownSeconds: e.target.value,
-                })
-              }
-              fullWidth
-            />
-            <TextField
               label="Task Progress Update Delay (seconds)"
               value={gameConfig.progressUpdateDelay}
               type="number"
@@ -86,7 +74,7 @@ function GameConfig() {
               fullWidth
             />
             <TextField
-              label="Sabotage Charges (shared)"
+              label="Sabotage Charges (pro Imposter)"
               value={gameConfig.sabotageCharges}
               type="number"
               onChange={(e) =>

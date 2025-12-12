@@ -11,7 +11,6 @@ export function useGetGameConfig() {
     socket.emit("message", "Requesting game config");
 
     socket.on("game_config", (config) => {
-      console.log("Received game config:", config);
       setGameConfig(config);
     });
   }, [socket]);

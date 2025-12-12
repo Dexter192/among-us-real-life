@@ -6,13 +6,22 @@ import {
   Chip,
   useTheme,
   Fade,
+  IconButton,
+  Tooltip,
+  Collapse,
+  Divider,
+  Button,
+  Stack,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useCompleteTask } from "../../../../hooks/useCompleteTask";
 import { useState, useEffect } from "react";
 
-export default function Task({ id, task }) {
+export default function Task({ id, sabotages, task, isImposter = false }) {
   const theme = useTheme();
   const { completeTask } = useCompleteTask();
   const [showLabel, setShowLabel] = useState(true);
@@ -21,6 +30,8 @@ export default function Task({ id, task }) {
     if (task.pending) return "Ausstehend";
     else return "Offen";
   });
+  const [showInfo, setShowInfo] = useState(false);
+  const [showSabotageMore, setShowSabotageMore] = useState(false);
 
   useEffect(() => {
     const oldLabel = labelText;
@@ -47,6 +58,14 @@ export default function Task({ id, task }) {
     else return "info";
   };
 
+  let sabotageData = null;
+  if (isImposter) {
+    sabotageData = sabotages ? sabotages[task.linked_sabotage] : null;
+  }
+  console.log("Sabotage Data:", sabotageData);
+  const taskDescription =
+    task.description || "Keine Beschreibung für diese Aufgabe vorhanden.";
+
   const colorPalette = getColor();
 
   return (
@@ -58,61 +77,159 @@ export default function Task({ id, task }) {
         transition:
           "transform 0.2s, box-shadow 0.2s, background-color 0.8s ease-in-out",
         "&:hover": {
-          transform: "translateY(-4px)",
           boxShadow: 4,
         },
       }}
-      onClick={() => completeTask(id)}
     >
       <CardContent>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-          <AssignmentIcon
-            sx={{
-              color: theme.palette[colorPalette].dark,
-              transition: "color 0.8s ease-in-out",
-            }}
-          />
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+          <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
+            <AssignmentIcon
+              sx={{
+                color: theme.palette[colorPalette].dark,
+                transition: "color 0.8s ease-in-out",
+              }}
+            />
+          </Box>
           <Typography
             variant="h6"
             sx={{
               fontWeight: 700,
-              flexGrow: 1,
               color: theme.palette[colorPalette].dark,
               transition: "color 0.8s ease-in-out",
+              textAlign: "center",
             }}
           >
             {task.name}
           </Typography>
-          <Chip
-            label={
-              <Fade in={showLabel} timeout={400}>
-                <span>{labelText}</span>
-              </Fade>
-            }
-            size="small"
-            sx={{
-              backgroundColor: theme.palette[colorPalette].main,
-              color: "white",
-              fontWeight: 600,
-              transition: "background-color 0.8s ease-in-out",
-            }}
-          />
-        </Box>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 2 }}>
-          <LocationOnIcon
-            sx={{
-              color: theme.palette[colorPalette].main,
-              fontSize: 20,
-              transition: "color 0.8s ease-in-out",
-            }}
-          />
-          <Typography
-            variant="body2"
-            sx={{ color: theme.palette.text.primary }}
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+            <Chip
+              label={
+                <Fade in={showLabel} timeout={400}>
+                  <span>{labelText}</span>
+                </Fade>
+              }
+              size="small"
+              sx={{
+                backgroundColor: theme.palette[colorPalette].main,
+                color: "white",
+                fontWeight: 600,
+                transition: "background-color 0.8s ease-in-out",
+              }}
+            />
+          </Box>
+        </Stack>
+        <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 2 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
+            sx={{ flex: 1 }}
           >
-            {task.location}
+            <LocationOnIcon
+              sx={{
+                color: theme.palette[colorPalette].main,
+                fontSize: 20,
+                transition: "color 0.8s ease-in-out",
+              }}
+            />
+            <Typography
+              variant="body2"
+              sx={{ color: theme.palette.text.primary }}
+            >
+              {task.location}
+            </Typography>
+          </Stack>
+
+          <IconButton
+            onClick={() => setShowInfo((prev) => !prev)}
+            sx={{
+              color: theme.palette[colorPalette].dark,
+              backgroundColor: theme.palette[colorPalette].light,
+              border: `2px solid ${theme.palette[colorPalette].main}`,
+              borderRadius: 2,
+              padding: 1,
+              scale: 0.9,
+              "&:hover": {
+                backgroundColor: theme.palette[colorPalette].main,
+                color: theme.palette.common.white,
+                transform: "scale(1.1)",
+              },
+              transition: "all 0.2s ease-in-out",
+            }}
+          >
+            {showInfo ? (
+              <ExpandLessIcon sx={{ fontSize: 28 }} />
+            ) : (
+              <ExpandMoreIcon sx={{ fontSize: 28 }} />
+            )}
+          </IconButton>
+
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+            <Button
+              variant="contained"
+              color={colorPalette}
+              onClick={() => completeTask(id)}
+              disabled={task.completed || task.pending}
+              sx={{
+                fontWeight: 600,
+                textTransform: "none",
+                px: 3,
+                py: 1,
+              }}
+            >
+              {task.completed
+                ? "Abgeschlossen"
+                : task.pending
+                ? "Wartet..."
+                : "Abschließen"}
+            </Button>
+          </Box>
+        </Stack>
+
+        <Collapse in={showInfo} timeout="auto" unmountOnExit>
+          <Divider sx={{ my: 1 }} />
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            {taskDescription}
           </Typography>
-        </Box>
+
+          <Collapse in={showInfo} timeout="auto" unmountOnExit>
+            <Button
+              size="small"
+              variant="text"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowSabotageMore((prev) => !prev);
+              }}
+            >
+              {showSabotageMore ? "WENIGER" : "MEHR"}
+            </Button>
+            {showInfo && (
+              <Collapse in={showSabotageMore} timeout="auto" unmountOnExit>
+                <Box
+                  sx={{
+                    mt: 1,
+                    p: 1.5,
+                    borderRadius: 2,
+                    border: `2px solid ${theme.palette.divider}`,
+                    backgroundColor: `rgba(0, 0, 0, 0.2)`,
+                  }}
+                >
+                  {isImposter && sabotageData?.name && (
+                    <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                      Sabotage: {sabotageData?.name}
+                    </Typography>
+                  )}
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    {isImposter && sabotageData?.effect
+                      ? sabotageData.effect
+                      : "Keine weiteren Infos für diese Aufgabe."}
+                  </Typography>
+                </Box>
+              </Collapse>
+            )}
+          </Collapse>
+        </Collapse>
       </CardContent>
     </Card>
   );

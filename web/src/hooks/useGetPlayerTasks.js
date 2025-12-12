@@ -16,7 +16,6 @@ export function useGetPlayerTasks(providedAuthId) {
     socket.emit("get_tasks", { authId });
 
     const handlePlayerTasks = (tasks) => {
-      console.log("Received tasks:", tasks);
       setTasks(tasks);
     };
 

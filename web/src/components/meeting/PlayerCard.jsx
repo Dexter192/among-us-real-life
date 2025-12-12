@@ -30,8 +30,6 @@ export default function PlayerCard({ id, player, isAlive, players, isAdmin }) {
   let votes = player.votes ?? [];
 
   if (isAdmin && votes.length > 0) {
-    console.log("Updating votes for player:", player.name);
-    console.log("Fetched players:", players);
     votes.map((voterId, idx) => {
       if (players && players[voterId]) {
         votes[idx] = players[voterId].name;

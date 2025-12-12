@@ -21,7 +21,7 @@ function getOrCreateSocket(isAdmin, authId) {
     });
 
     socketInstance.on("server_ready", () => {
-      console.log("Server is ready (yay):", socketInstance.id);
+      console.log("Server is ready:", socketInstance.id);
     });
   }
 

@@ -17,7 +17,6 @@ export function useGetActiveSabotage(sabotageTriggered) {
     socket.emit("get_active_sabotage");
 
     const handleActiveSabotage = (sabotageData) => {
-      console.log("Received sabotage triggered:", sabotageData);
       setSabotage(sabotageData);
     };
 

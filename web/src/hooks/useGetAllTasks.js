@@ -10,7 +10,6 @@ export function useGetAllTasks() {
     socket.emit("get_all_tasks");
 
     socket.on("tasks", (tasks) => {
-      console.log("Received tasks:", tasks);
       setTasks(tasks);
     });
   }, [socket]);

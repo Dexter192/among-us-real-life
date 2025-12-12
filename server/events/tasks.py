@@ -181,7 +181,8 @@ async def process_pending_task(sid: str, data: Any) -> None:
         await sio.emit("pending_tasks", game_state.state["pending_tasks"])
         delay = int(game_state.config.data.get("progressUpdateDelay", 0))
         await total_tasks_completed(sid, delay=delay)
-        await sabotage.trigger_sabotage_if_needed(player, task)
+        if accept:
+            await sabotage.trigger_sabotage_if_needed(player, task)
 
 
 @sio.event

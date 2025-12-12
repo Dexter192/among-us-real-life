@@ -21,8 +21,6 @@ export default function GamePage({ gameState }) {
     return <EmergencyMeeting gameState={gameState} />;
   }
 
-  console.log("Gamestate in GamePage:", gameState);
-
   return (
     <>
       <Typography variant="h4" sx={{ mb: 2 }}>

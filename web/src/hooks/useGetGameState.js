@@ -12,7 +12,6 @@ export function useGetGameState() {
     socket.emit("message", "Requesting game state");
 
     socket.on("game_state", (state) => {
-      console.log("Received game state:", state);
       setGameState(state);
     });
   }, [socket]);
