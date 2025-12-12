@@ -15,16 +15,19 @@ import {
   CardActionArea,
   CardContent,
   Chip,
+  Button,
 } from "@mui/material";
 import { useState, useMemo } from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import SecurityIcon from "@mui/icons-material/Security";
+import { useChangePlayerVitals } from "../../../../hooks/useChangePlayerVitals";
 
 export default function PlayerTab() {
   const { players } = useGetPlayers();
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [roleFilter, setRoleFilter] = useState(null); // "IMPOSTER", "CREWMATE", or null
   const { tasks } = useGetPlayerTasks(selectedPlayerId);
+  const { changePlayerVitals } = useChangePlayerVitals();
   const theme = useTheme();
 
   const stats = useMemo(() => {
@@ -75,6 +78,11 @@ export default function PlayerTab() {
 
   const handleClosePlayerDialog = () => {
     setSelectedPlayerId(null);
+  };
+
+  const handleTogglePlayerStatus = () => {
+    if (!selectedPlayerId || !selectedPlayer) return;
+    changePlayerVitals(selectedPlayerId, !selectedPlayer.isAlive);
   };
 
   return (
@@ -318,23 +326,46 @@ export default function PlayerTab() {
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                 Status
               </Typography>
-              <Chip
-                label={selectedPlayer?.isAlive ? "Alive" : "Dead"}
-                variant={selectedPlayer?.isAlive ? "filled" : "outlined"}
-                sx={{
-                  backgroundColor: selectedPlayer?.isAlive
-                    ? "#27ae60"
-                    : "transparent",
-                  color: selectedPlayer?.isAlive ? "white" : "#e74c3c",
-                  borderColor: selectedPlayer?.isAlive
-                    ? "transparent"
-                    : "#e74c3c",
-                  fontWeight: 600,
-                  fontSize: "1rem",
-                  height: "auto",
-                  padding: "8px 12px",
-                }}
-              />
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Chip
+                  label={selectedPlayer?.isAlive ? "Alive" : "Dead"}
+                  variant={selectedPlayer?.isAlive ? "filled" : "outlined"}
+                  sx={{
+                    backgroundColor: selectedPlayer?.isAlive
+                      ? "#27ae60"
+                      : "transparent",
+                    color: selectedPlayer?.isAlive ? "white" : "#e74c3c",
+                    borderColor: selectedPlayer?.isAlive
+                      ? "transparent"
+                      : "#e74c3c",
+                    fontWeight: 600,
+                    fontSize: "1rem",
+                    height: "auto",
+                    padding: "8px 12px",
+                  }}
+                />
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={handleTogglePlayerStatus}
+                  sx={{
+                    borderColor: selectedPlayer?.isAlive
+                      ? "#e74c3c"
+                      : "#27ae60",
+                    color: selectedPlayer?.isAlive ? "#e74c3c" : "#27ae60",
+                    "&:hover": {
+                      borderColor: selectedPlayer?.isAlive
+                        ? "#c0392b"
+                        : "#229954",
+                      backgroundColor: selectedPlayer?.isAlive
+                        ? "rgba(231, 76, 60, 0.04)"
+                        : "rgba(39, 174, 96, 0.04)",
+                    },
+                  }}
+                >
+                  {selectedPlayer?.isAlive ? "Mark as Dead" : "Mark as Alive"}
+                </Button>
+              </Stack>
             </Box>
 
             {/* Tasks */}

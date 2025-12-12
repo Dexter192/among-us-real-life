@@ -1,55 +1,99 @@
-# Among Us in real life
+# Among Us - Real Life Edition
 
-I hacked together this small little web app for facilitating a game of Among Us in real life.
+A full-stack web application for playing Among Us in real life with Socket.IO-based real-time updates, configurable game settings, and a complete admin dashboard.
+
+## Demo
+
+<video width="320" height="240" controls>
+  <source src="demo/amongus_demo.mp4" type="video/mp4">
+</video>
+
 
 ## Features
 
--   Assign impostors/crewmates
--   Assign tasks
--   Checking off tasks updates a global progress bar in real-time
+### Admin Dashboard
+- **Game Configuration** - Customize tasks, sabotages, impostor count, kill cooldowns
+- **Player Management** - Monitor all players, view roles, track task progress, manage player status
+- **Task Control** - Approve/reject task confirmations, view pending and completed tasks
+- **Sabotage System** - Configure sabotage types with cooldowns and manage active sabotages
+- **Meeting Control** - Start meetings, view votes, end voting sessions
 
-Audio recordings from [https://www.voicy.network/pages/among-us](https://www.voicy.network/pages/among-us)
+### Player Experience
+- **Role Assignment** - Random impostor/crewmate assignment with role reveal
+- **Task Management** - View assigned tasks, request confirmation from admin, and track progress
+- **Emergency Meetings** - Report dead bodies and participate in voting
+- **Sabotage Events** - Configurable sabotages (optionally with countdowns)
+- **Game Control** - Decide winning team manually
+- **Live Updates** - Real-time game state synchronization via Socket.IO
 
-## Screenshot
+<img src="demo/Admin_Game_Overview.png"/>
+<img src="demo/Admin_PlayerInfo.png" />
+<img src="demo/Admin_TaskConfig.png" />
 
-<img src="media/IMG_0976.PNG" width="50%" />
+## Tech Stack
 
-## Usage
+- **Frontend**: React + Vite + Material-UI
+- **Backend**: Python + FastAPI + Socket.IO
+- **Deployment**: Docker + Docker Compose + GitHub Actions
 
-This was built for personal use, but anyone is welcome to use this for hosting their own game.
+## Quick Start
 
-### 1. Configure the game
+### Using Docker (Recommended)
 
-You may want to modify the following properties located in [`src/index.js`](https://github.com/michaelgira23/among-us-real-life/blob/master/src/index.js):
-
-[`TASKS`](https://github.com/michaelgira23/among-us-real-life/blob/master/src/index.js#L14) - An array of strings that consist of all possible tasks. These will be randomly assigned to players.
-
-[`N_TASKS`](https://github.com/michaelgira23/among-us-real-life/blob/master/src/index.js#L31) - Number of tasks to assign each player
-
-[`N_IMPOSTORS`](https://github.com/michaelgira23/among-us-real-life/blob/master/src/index.js#L32) - Number of impostors to assign each round
-
-### 2. Start the backend
-
-Start the backend with
-
+```bash
+cd docker
+docker compose up -d
 ```
-$ npm install
-$ npm start
+
+Access the app at:
+- **Players**: http://localhost
+- **Admin**: http://localhost/admin
+
+Default credentials (change in `.env` or docker-compose.yml):
+- Admin password: `adminpass`
+- Player password: `playerpass`
+
+### Local Development
+
+**Backend:**
+```bash
+cd server
+python -m venv .venv
+source .venv/bin/activate 
+pip install -e .
+python main.py
 ```
 
-:information_source: Use a utility like [Nodemon](https://nodemon.io/) to automatically restart the backend upon any changes. This is useful when modifying the number of impostors or tasks.
+**Frontend:**
+```bash
+cd web
+npm install
+npm run dev
+```
 
-### 3. Connect to the admin dashboard
+Create `web/.env`:
+```
+VITE_SOCKET_URL=http://localhost:5000
+VITE_SOCKET_PATH=/socket.io
+VITE_ADMIN_PASSWORD=adminpass
+VITE_PLAYER_PASSWORD=playerpass
+```
 
-Visit [http://localhost:4046/admin](http://localhost:4046/admin) to access the admin panel. There is a single button to start the game.
+Sync the passwords with `server/.env`
+```
+ADMIN_PASSWORD=adminpass
+PLAYER_PASSWORD=playerpass
+```
 
-Pressing the start button will reset task progress, assign new tasks, and assign impostors. Press it once all players connect, otherwise you will have to press it again.
+## Configuration
 
-### 4. Invite friends to join
+Game settings are configurable via the admin dashboard:
+- **Game Config**: Task requirements, impostor count, kill cooldown, max players per task
+- **Tasks**: Add/edit/remove available tasks with images and names
+- **Sabotages**: Configure sabotage types with durations and charges
 
-Players may access the the game at [http://localhost:4046](http://localhost:4046). On other computers (or phones), you will need to enter the computer's local IP or use a tunneling service like [ngrok](https://ngrok.com). Alternatively, you could deploy this yourself.
+Configuration is persisted in `server/config/` JSON files.
 
-## Known issues
+## Warning
 
--   Sometimes, duplicate tasks are assigned (temporary workaround is to start another game)
--   On some Android phones, hiding the browser will reset its state, therefore losing your tasks
+This project is not optimized for performance, maintainability or security! Use at your own risk

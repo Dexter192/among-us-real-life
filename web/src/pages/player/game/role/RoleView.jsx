@@ -48,6 +48,7 @@ export default function RoleView() {
             position: "fixed",
             top: 0,
             left: 0,
+            zIndex: 9999,
           }}
         >
           <Box
