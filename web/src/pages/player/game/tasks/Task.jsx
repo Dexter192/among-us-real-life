@@ -7,7 +7,6 @@ import {
   useTheme,
   Fade,
   IconButton,
-  Tooltip,
   Collapse,
   Divider,
   Button,
@@ -17,7 +16,6 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useCompleteTask } from "../../../../hooks/useCompleteTask";
 import { useState, useEffect } from "react";
 
@@ -30,7 +28,6 @@ export default function Task({ id, sabotages, task, isImposter = false }) {
     if (task.pending) return "Ausstehend";
     else return "Offen";
   });
-  const [showInfo, setShowInfo] = useState(false);
   const [showSabotageMore, setShowSabotageMore] = useState(false);
 
   useEffect(() => {
@@ -141,30 +138,6 @@ export default function Task({ id, sabotages, task, isImposter = false }) {
             </Typography>
           </Stack>
 
-          <IconButton
-            onClick={() => setShowInfo((prev) => !prev)}
-            sx={{
-              color: theme.palette[colorPalette].dark,
-              backgroundColor: theme.palette[colorPalette].light,
-              border: `2px solid ${theme.palette[colorPalette].main}`,
-              borderRadius: 2,
-              padding: 1,
-              scale: 0.9,
-              "&:hover": {
-                backgroundColor: theme.palette[colorPalette].main,
-                color: theme.palette.common.white,
-                transform: "scale(1.1)",
-              },
-              transition: "all 0.2s ease-in-out",
-            }}
-          >
-            {showInfo ? (
-              <ExpandLessIcon sx={{ fontSize: 28 }} />
-            ) : (
-              <ExpandMoreIcon sx={{ fontSize: 28 }} />
-            )}
-          </IconButton>
-
           <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
             <Button
               variant="contained"
@@ -187,48 +160,58 @@ export default function Task({ id, sabotages, task, isImposter = false }) {
           </Box>
         </Stack>
 
-        <Collapse in={showInfo} timeout="auto" unmountOnExit>
-          <Divider sx={{ my: 1 }} />
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            {taskDescription}
-          </Typography>
+        {/* Always-expanded details section */}
+        <Divider sx={{ my: 1 }} />
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          {taskDescription}
+        </Typography>
 
-          <Collapse in={showInfo} timeout="auto" unmountOnExit>
-            <Button
-              size="small"
-              variant="text"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowSabotageMore((prev) => !prev);
-              }}
-            >
-              {showSabotageMore ? "WENIGER" : "MEHR"}
-            </Button>
-            {showInfo && (
-              <Collapse in={showSabotageMore} timeout="auto" unmountOnExit>
-                <Box
-                  sx={{
-                    mt: 1,
-                    p: 1.5,
-                    borderRadius: 2,
-                    border: `2px solid ${theme.palette.divider}`,
-                    backgroundColor: `rgba(0, 0, 0, 0.2)`,
-                  }}
-                >
-                  {isImposter && sabotageData?.name && (
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                      Sabotage: {sabotageData?.name}
-                    </Typography>
-                  )}
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    {isImposter && sabotageData?.effect
-                      ? sabotageData.effect
-                      : "Keine weiteren Infos für diese Aufgabe."}
-                  </Typography>
-                </Box>
-              </Collapse>
+        {/* Bottom-right small arrow to toggle more sabotage info */}
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <IconButton
+            size="small"
+            onClick={() => setShowSabotageMore((prev) => !prev)}
+            sx={{
+              color: theme.palette[colorPalette].dark,
+              backgroundColor: theme.palette[colorPalette].light,
+              border: `1px solid ${theme.palette[colorPalette].main}`,
+              borderRadius: 2,
+              padding: 0.5,
+              "&:hover": {
+                backgroundColor: theme.palette[colorPalette].main,
+                color: theme.palette.common.white,
+              },
+            }}
+          >
+            {showSabotageMore ? (
+              <ExpandLessIcon fontSize="small" />
+            ) : (
+              <ExpandMoreIcon fontSize="small" />
             )}
-          </Collapse>
+          </IconButton>
+        </Box>
+
+        <Collapse in={showSabotageMore} timeout="auto" unmountOnExit>
+          <Box
+            sx={{
+              mt: 1,
+              p: 1.5,
+              borderRadius: 2,
+              border: `2px solid ${theme.palette.divider}`,
+              backgroundColor: `rgba(0, 0, 0, 0.2)`,
+            }}
+          >
+            {isImposter && sabotageData?.name && (
+              <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                Sabotage: {sabotageData?.name}
+              </Typography>
+            )}
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              {isImposter && sabotageData?.effect
+                ? sabotageData.effect
+                : "Keine weiteren Infos für diese Aufgabe."}
+            </Typography>
+          </Box>
         </Collapse>
       </CardContent>
     </Card>
