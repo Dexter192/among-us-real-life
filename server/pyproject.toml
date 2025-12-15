@@ -11,11 +11,11 @@ dependencies = [
   "python-socketio==5.11.1",
   "python-engineio==4.9.0",
   "uvicorn",
-  "dotenv",
+  "python-dotenv",
 ]
 
 [tool.setuptools]
-packages = ["server", "config", "events"]
+packages = ["server"]
 
 [tool.setuptools.package-dir]
 server = "."
