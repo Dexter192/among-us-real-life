@@ -138,7 +138,7 @@ async def trigger_sabotage_if_needed(player: dict, task: dict) -> None:
     timer_seconds = sabotage.get("timerSeconds")
     if timer_seconds:
         sabotage["sabotageEndUTC"] = (
-            datetime.now() + timedelta(seconds=int(timer_seconds))
+            datetime.now().astimezone() + timedelta(seconds=int(timer_seconds))
         ).isoformat()
     else:
         sabotage["sabotageEndUTC"] = None
