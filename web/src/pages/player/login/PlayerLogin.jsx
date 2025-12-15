@@ -8,14 +8,15 @@ import {
   Typography,
 } from "@mui/material";
 import { useSocketConnection } from "../../../hooks/useSocketConnection";
+import { useAuthId } from "../../../hooks/useAuthId";
 
-export default function PlayerLogin({ setIsAuthorized }) {
+export default function PlayerLogin({ isAuthorized, setIsAuthorized }) {
   const [playerName, setPlayerName] = useState("");
   const [playerCode, setPlayerCode] = useState("");
+  const { authId } = useAuthId();
   const [isWaitingForAuth, setIsWaitingForAuth] = useState(false);
   const { socket } = useSocketConnection();
 
-  // Auto-authorize in dev mode
   useEffect(() => {
     if (!socket) return;
     if (import.meta.env.DEV) {
@@ -23,10 +24,10 @@ export default function PlayerLogin({ setIsAuthorized }) {
         role: "PLAYER",
         name: "DevPlayer",
         password: import.meta.env.VITE_PLAYER_PASSWORD,
-        authId: localStorage.getItem("authId"),
+        authId: authId,
       });
     }
-  }, [socket, setIsAuthorized]);
+  }, [socket, authId, setIsAuthorized]);
 
   // Listen for login response
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function PlayerLogin({ setIsAuthorized }) {
 
     socket.emit("is_logged_in", {
       role: "PLAYER",
-      authId: localStorage.getItem("authId"),
+      authId: authId,
     });
 
     socket.on("login_response", (response) => {
@@ -43,13 +44,22 @@ export default function PlayerLogin({ setIsAuthorized }) {
         setIsAuthorized(true);
       } else {
         setPlayerCode("");
+        setIsAuthorized(false);
       }
     });
 
+    const onDisconnect = (reason) => {
+      console.log("[PlayerPage] socket disconnected:", reason);
+      setIsAuthorized(false);
+    };
+
+    socket.on("disconnect", onDisconnect);
+
     return () => {
       socket.off("login_response");
+      socket.off("disconnect", onDisconnect);
     };
-  }, [socket, setIsAuthorized]);
+  }, [socket, authId, setIsAuthorized]);
 
   const handleLogin = () => {
     if (!playerCode || !socket) return;
@@ -59,9 +69,13 @@ export default function PlayerLogin({ setIsAuthorized }) {
       role: "PLAYER",
       password: playerCode,
       name: playerName,
-      authId: localStorage.getItem("authId"),
+      authId: authId,
     });
   };
+
+  if (isAuthorized) {
+    return null;
+  }
 
   return (
     <Stack spacing={2} alignItems="center" sx={{ py: 3 }}>

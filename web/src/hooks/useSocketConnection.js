@@ -5,16 +5,14 @@ import { useAuthId } from "./useAuthId";
 let socketInstance = null;
 let connectionCount = 0;
 
-function getOrCreateSocket(isAdmin, authId) {
+function getOrCreateSocket(authId) {
   if (!socketInstance) {
-    const role = isAdmin ? "ADMIN" : "PLAYER";
     const socketUrl = import.meta.env.VITE_SOCKET_URL || undefined;
     const socketPath = import.meta.env.VITE_SOCKET_PATH || "/api/socket.io";
     socketInstance = io(socketUrl, {
       path: socketPath,
       transports: ["websocket"],
       auth: {
-        role: role,
         authId: authId,
       },
     });
@@ -31,7 +29,7 @@ function getOrCreateSocket(isAdmin, authId) {
   return socketInstance;
 }
 
-export function useSocketConnection(isAdmin = false, socketId = undefined) {
+export function useSocketConnection(socketId = undefined) {
   const { authId } = useAuthId();
 
   const [socket, setSocket] = useState(() => {
@@ -45,13 +43,9 @@ export function useSocketConnection(isAdmin = false, socketId = undefined) {
     if (!authId) return;
 
     // Get or create the singleton socket
-    const socketConn = getOrCreateSocket(isAdmin, authId);
+    const socketConn = getOrCreateSocket(authId);
     setSocket(socketConn);
     connectionCount++;
-
-    if (socketId && socketConn) {
-      socketConn.emit("update-user-state", socketId);
-    }
 
     return () => {
       connectionCount--;
@@ -60,7 +54,7 @@ export function useSocketConnection(isAdmin = false, socketId = undefined) {
         socketInstance = null;
       }
     };
-  }, [isAdmin, socketId, authId]);
+  }, [socketId, authId]);
 
   return { socket };
 }

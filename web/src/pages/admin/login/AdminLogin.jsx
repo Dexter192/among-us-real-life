@@ -8,10 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useSocketConnection } from "../../../hooks/useSocketConnection";
+import { useAuthId } from "../../../hooks/useAuthId";
 
-export default function AdminLogin({ setIsAuthorized }) {
+export default function AdminLogin({ isAuthorized, setIsAuthorized }) {
   const [adminCode, setAdminCode] = useState("");
   const [isWaitingForAuth, setIsWaitingForAuth] = useState(false);
+  const { authId } = useAuthId();
   const { socket } = useSocketConnection();
 
   // Auto-authorize in dev mode
@@ -21,10 +23,10 @@ export default function AdminLogin({ setIsAuthorized }) {
       socket.emit("login", {
         role: "ADMIN",
         password: import.meta.env.VITE_ADMIN_PASSWORD,
-        authId: localStorage.getItem("authId"),
+        authId: authId,
       });
     }
-  }, [socket, setIsAuthorized]);
+  }, [socket, authId, setIsAuthorized]);
 
   // Listen for login response
   useEffect(() => {
@@ -32,7 +34,7 @@ export default function AdminLogin({ setIsAuthorized }) {
 
     socket.emit("is_logged_in", {
       role: "ADMIN",
-      authId: localStorage.getItem("authId"),
+      authId: authId,
     });
 
     socket.on("login_response", (response) => {
@@ -40,15 +42,21 @@ export default function AdminLogin({ setIsAuthorized }) {
       if (response.success) {
         setIsAuthorized(true);
       } else {
-        alert(`Login failed: ${response.error}`);
         setAdminCode("");
+        setIsAuthorized(false);
       }
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log("[AdminPage] socket disconnected:", reason);
+      setIsAuthorized(false);
     });
 
     return () => {
       socket.off("login_response");
+      socket.off("disconnect");
     };
-  }, [socket, setIsAuthorized]);
+  }, [socket, authId, setIsAuthorized]);
 
   const handleLogin = () => {
     if (!adminCode || !socket) return;
@@ -57,9 +65,13 @@ export default function AdminLogin({ setIsAuthorized }) {
     socket.emit("login", {
       role: "ADMIN",
       password: adminCode,
-      authId: localStorage.getItem("authId"),
+      authId: authId,
     });
   };
+
+  if (isAuthorized) {
+    return null;
+  }
 
   return (
     <Stack spacing={2} alignItems="center" sx={{ py: 3 }}>

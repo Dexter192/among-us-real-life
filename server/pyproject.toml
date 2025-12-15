@@ -13,3 +13,9 @@ dependencies = [
   "uvicorn",
   "dotenv",
 ]
+
+[tool.setuptools]
+packages = ["server", "config", "events"]
+
+[tool.setuptools.package-dir]
+server = "."

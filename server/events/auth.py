@@ -46,6 +46,9 @@ async def perform_login(sid: str, data: Dict[str, Any]) -> None:
     if auth_id in game_state.players[player_role].keys():
         game_state.players[player_role][auth_id]["sid"] = sid
         game_state.players.save()
+        # Join per-user and role rooms (idempotent: joining an existing room is safe)
+        await sio.enter_room(sid, f"user:{auth_id}")
+        await sio.enter_room(sid, "admins" if role == "ADMIN" else "players")
         await sio.emit("login_response", {"success": True}, to=sid)
         return
 
@@ -62,6 +65,9 @@ async def perform_login(sid: str, data: Dict[str, Any]) -> None:
 
     game_state.state["player_count"] = len(game_state.players["players"])
     game_state.players.save()
+    # Join per-user and role rooms for new users
+    await sio.enter_room(sid, f"user:{auth_id}")
+    await sio.enter_room(sid, "admins" if role == "ADMIN" else "players")
     await sio.emit("login_response", {"success": True}, to=sid)
 
 
@@ -72,6 +78,9 @@ async def is_logged_in(sid: str, data: Dict[str, Any]) -> None:
 
     if reauth(sid, role, auth_id):
         print(f"Re-authorized existing {role}: {auth_id}")
+        # Ensure the (possibly new) sid joins the appropriate rooms
+        await sio.enter_room(sid, f"user:{auth_id}")
+        await sio.enter_room(sid, "admins" if role == "ADMIN" else "players")
         await sio.emit("login_response", {"success": True}, to=sid)
 
 
