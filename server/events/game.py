@@ -99,11 +99,11 @@ def initilize_game_state():
     state.state["sabotages"] = state.sabotages.data.get("activeSabotageList", {})
     state.state["votes"] = {}
     state.state["endOfGameUTC"] = (
-        datetime.now()
+        datetime.now().astimezone()
         + timedelta(minutes=int(state.config.data.get("gameTimeMinutes")))
     ).isoformat()
     state.state["endOfMeetingCooldownUTC"] = (
-        datetime.now()
+        datetime.now().astimezone()
         + timedelta(minutes=int(state.config.data.get("meetingCooldownMinutes")))
     ).isoformat()
 
@@ -113,7 +113,11 @@ async def game_timer():
     try:
         while state.state["started"]:
             end_time = datetime.fromisoformat(state.state["endOfGameUTC"])
-            time_remaining = (end_time - datetime.now()).total_seconds()
+            now_local = datetime.now().astimezone()
+            # Normalize naive datetimes (from legacy values) to local timezone for safe subtraction
+            if end_time.tzinfo is None:
+                end_time = end_time.replace(tzinfo=now_local.tzinfo)
+            time_remaining = (end_time - now_local).total_seconds()
 
             if time_remaining <= 0:
                 state.state["started"] = False

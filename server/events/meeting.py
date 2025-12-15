@@ -14,17 +14,20 @@ async def reset_votes():
 
 @sio.event
 async def report_dead_body(sid: str) -> None:
-    if (
-        datetime.fromisoformat(gamestate.state.get("endOfMeetingCooldownUTC"))
-        > datetime.now()
-    ):
+    end_cooldown = datetime.fromisoformat(
+        gamestate.state.get("endOfMeetingCooldownUTC")
+    )
+    now_local = datetime.now().astimezone()
+    if end_cooldown.tzinfo is None:
+        end_cooldown = end_cooldown.replace(tzinfo=now_local.tzinfo)
+    if end_cooldown > now_local:
         print("Meeting cooldown active, cannot report body.")
         return
     print("Dead body reported by:", sid)
     await reset_votes()
     gamestate.state["emergency_meeting"] = True
     gamestate.state["endOfMeetingUTC"] = (
-        datetime.now()
+        datetime.now().astimezone()
         + timedelta(minutes=int(gamestate.config.data.get("meetingTimeMinutes")))
     ).isoformat()
     await sio.emit("game_state", gamestate.state)
@@ -33,7 +36,11 @@ async def report_dead_body(sid: str) -> None:
 @sio.event
 async def vote_for_player(sid: str, data: dict) -> None:
     # Meeting time must be > 0
-    if datetime.fromisoformat(gamestate.state.get("endOfMeetingUTC")) < datetime.now():
+    end_meeting = datetime.fromisoformat(gamestate.state.get("endOfMeetingUTC"))
+    now_local = datetime.now().astimezone()
+    if end_meeting.tzinfo is None:
+        end_meeting = end_meeting.replace(tzinfo=now_local.tzinfo)
+    if end_meeting < now_local:
         print("Meeting time has ended, vote not counted.")
         return
 
@@ -90,7 +97,7 @@ async def end_emergency_meeting(sid: str) -> None:
     gamestate.state["emergency_meeting"] = False
     await reset_votes()
     gamestate.state["endOfMeetingCooldownUTC"] = (
-        datetime.now()
+        datetime.now().astimezone()
         + timedelta(minutes=int(gamestate.config.data.get("meetingCooldownMinutes")))
     ).isoformat()
     await sio.emit("game_state", gamestate.state)

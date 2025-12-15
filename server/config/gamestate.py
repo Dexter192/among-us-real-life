@@ -3,6 +3,11 @@ from .json_store import JsonStore
 
 class GameState:
     _instance = None
+    config: JsonStore | None = None
+    tasks: JsonStore | None = None
+    sabotages: JsonStore | None = None
+    players: JsonStore | None = None
+    state: dict | None = None
 
     def __new__(cls):
         if cls._instance is None:

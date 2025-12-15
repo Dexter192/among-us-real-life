@@ -6,7 +6,7 @@ import {
   Stack,
 } from "@mui/material";
 
-export default function Player({ id, player, onSelect, isFiltered }) {
+export default function PlayerOverview({ id, player, onSelect, isFiltered }) {
   const isImpostor = player.game_role === "IMPOSTER";
   const roleColor = isFiltered ? "white" : isImpostor ? "#e74c3c" : "#27ae60";
 

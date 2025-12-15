@@ -1,25 +1,18 @@
 import { useGetPlayers } from "../../../../hooks/useGetPlayers";
 import { useGetPlayerTasks } from "../../../../hooks/useGetPlayerTasks";
-import Player from "./Player";
+import PlayerOverview from "./PlayerOverview";
 import PlayerTask from "./PlayerTask";
+import PlayerDetails from "./PlayerDetails";
+import PlayerStatsCards from "./PlayerStatsCards";
+import PlayerGridSection from "./PlayerGridSection";
 import {
   Box,
-  Grid,
-  Stack,
   Typography,
   Dialog,
   DialogTitle,
   DialogContent,
-  useTheme,
-  Card,
-  CardActionArea,
-  CardContent,
-  Chip,
-  Button,
 } from "@mui/material";
 import { useState, useMemo } from "react";
-import PersonIcon from "@mui/icons-material/Person";
-import SecurityIcon from "@mui/icons-material/Security";
 import { useChangePlayerVitals } from "../../../../hooks/useChangePlayerVitals";
 
 export default function PlayerTab() {
@@ -28,7 +21,6 @@ export default function PlayerTab() {
   const [roleFilter, setRoleFilter] = useState(null); // "IMPOSTER", "CREWMATE", or null
   const { tasks } = useGetPlayerTasks(selectedPlayerId);
   const { changePlayerVitals } = useChangePlayerVitals();
-  const theme = useTheme();
 
   const stats = useMemo(() => {
     if (!players) return { crewmates: 0, impostors: 0, total: 0 };
@@ -55,7 +47,7 @@ export default function PlayerTab() {
     if (!players) return [];
     if (!roleFilter) return Object.entries(players);
     return Object.entries(players).filter(
-      ([_, player]) => player.game_role === roleFilter
+      ([, player]) => player.game_role === roleFilter
     );
   }, [players, roleFilter]);
 
@@ -67,8 +59,6 @@ export default function PlayerTab() {
     () => filteredPlayers.filter(([, player]) => player.isAlive === false),
     [filteredPlayers]
   );
-  const livingCount = livingPlayers.length;
-  const deadCount = deadPlayers.length;
 
   const selectedPlayer = selectedPlayerId && players?.[selectedPlayerId];
 
@@ -88,135 +78,11 @@ export default function PlayerTab() {
   return (
     <Box sx={{ p: 3 }}>
       {/* Stats Section */}
-      <Box
-        sx={{
-          mb: 4,
-          p: 3,
-          backgroundColor: theme.palette.background.paper,
-          borderRadius: 2,
-          boxShadow: 1,
-        }}
-      >
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>
-          Game Statistics
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={12} md={6}>
-            <Card
-              sx={{
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                border: roleFilter === null ? "2px solid white" : "none",
-                "&:hover": {
-                  transform: "translateY(-2px)",
-                  boxShadow: 2,
-                  border: "2px solid white",
-                },
-              }}
-              onClick={() => setRoleFilter(null)}
-            >
-              <CardActionArea>
-                <CardContent>
-                  <Stack spacing={1} sx={{ textAlign: "center" }}>
-                    <PersonIcon
-                      sx={{
-                        fontSize: 32,
-                        color: theme.palette.primary.main,
-                        mx: "auto",
-                      }}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      Total Players
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        fontWeight: 700,
-                        color: theme.palette.primary.main,
-                      }}
-                    >
-                      {stats.total}
-                    </Typography>
-                  </Stack>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <Card
-              sx={{
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                border: roleFilter === "CREWMATE" ? "2px solid white" : "none",
-                "&:hover": {
-                  transform: "translateY(-2px)",
-                  boxShadow: 2,
-                  border: "2px solid white",
-                },
-              }}
-              onClick={() =>
-                setRoleFilter(roleFilter === "CREWMATE" ? null : "CREWMATE")
-              }
-            >
-              <CardActionArea>
-                <CardContent>
-                  <Stack spacing={1} sx={{ textAlign: "center" }}>
-                    <PersonIcon
-                      sx={{ fontSize: 32, color: "#27ae60", mx: "auto" }}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      Crewmates
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      sx={{ fontWeight: 700, color: "#27ae60" }}
-                    >
-                      {stats.crewmates}
-                    </Typography>
-                  </Stack>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card
-              sx={{
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-                border: roleFilter === "IMPOSTER" ? "2px solid white" : "none",
-                "&:hover": {
-                  transform: "translateY(-2px)",
-                  boxShadow: 2,
-                  border: "2px solid white",
-                },
-              }}
-              onClick={() =>
-                setRoleFilter(roleFilter === "IMPOSTER" ? null : "IMPOSTER")
-              }
-            >
-              <CardActionArea>
-                <CardContent>
-                  <Stack spacing={1} sx={{ textAlign: "center" }}>
-                    <SecurityIcon
-                      sx={{ fontSize: 32, color: "#e74c3c", mx: "auto" }}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      Impostors
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      sx={{ fontWeight: 700, color: "#e74c3c" }}
-                    >
-                      {stats.impostors}
-                    </Typography>
-                  </Stack>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
+      <PlayerStatsCards
+        stats={stats}
+        roleFilter={roleFilter}
+        onChangeRole={setRoleFilter}
+      />
 
       {/* Filter Info */}
       {roleFilter && (
@@ -238,45 +104,19 @@ export default function PlayerTab() {
             })`
           : `Players (${Object.keys(players || {}).length})`}
       </Typography>
-      {livingPlayers.length > 0 && (
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 600 }}>
-            Living ({livingCount})
-          </Typography>
-          <Grid container spacing={2}>
-            {livingPlayers.map(([id, player]) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={id}>
-                <Player
-                  id={id}
-                  player={player}
-                  onSelect={handleSelectPlayer}
-                  isFiltered={!roleFilter}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      )}
+      <PlayerGridSection
+        title="Living"
+        players={livingPlayers}
+        roleFilter={roleFilter}
+        onSelect={handleSelectPlayer}
+      />
 
-      {deadPlayers.length > 0 && (
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 600 }}>
-            Dead ({deadCount})
-          </Typography>
-          <Grid container spacing={2}>
-            {deadPlayers.map(([id, player]) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={id}>
-                <Player
-                  id={id}
-                  player={player}
-                  onSelect={handleSelectPlayer}
-                  isFiltered={!roleFilter}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      )}
+      <PlayerGridSection
+        title="Dead"
+        players={deadPlayers}
+        roleFilter={roleFilter}
+        onSelect={handleSelectPlayer}
+      />
 
       {livingPlayers.length === 0 && deadPlayers.length === 0 && (
         <Typography color="text.secondary">
@@ -295,87 +135,16 @@ export default function PlayerTab() {
           {selectedPlayer?.name}
         </DialogTitle>
         <DialogContent>
-          <Stack spacing={2} sx={{ mt: 2 }}>
-            {/* Role Chip */}
-            <Box>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                Role
-              </Typography>
-              <Chip
-                label={
-                  selectedPlayer?.game_role === "IMPOSTER"
-                    ? "Impostor"
-                    : "Crewmate"
-                }
-                sx={{
-                  backgroundColor:
-                    selectedPlayer?.game_role === "IMPOSTER"
-                      ? "#e74c3c"
-                      : "#27ae60",
-                  color: "white",
-                  fontWeight: 600,
-                  fontSize: "1rem",
-                  height: "auto",
-                  padding: "8px 12px",
-                }}
-              />
-            </Box>
-
-            {/* Status Chip */}
-            <Box>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                Status
-              </Typography>
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Chip
-                  label={selectedPlayer?.isAlive ? "Alive" : "Dead"}
-                  variant={selectedPlayer?.isAlive ? "filled" : "outlined"}
-                  sx={{
-                    backgroundColor: selectedPlayer?.isAlive
-                      ? "#27ae60"
-                      : "transparent",
-                    color: selectedPlayer?.isAlive ? "white" : "#e74c3c",
-                    borderColor: selectedPlayer?.isAlive
-                      ? "transparent"
-                      : "#e74c3c",
-                    fontWeight: 600,
-                    fontSize: "1rem",
-                    height: "auto",
-                    padding: "8px 12px",
-                  }}
-                />
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={handleTogglePlayerStatus}
-                  sx={{
-                    borderColor: selectedPlayer?.isAlive
-                      ? "#e74c3c"
-                      : "#27ae60",
-                    color: selectedPlayer?.isAlive ? "#e74c3c" : "#27ae60",
-                    "&:hover": {
-                      borderColor: selectedPlayer?.isAlive
-                        ? "#c0392b"
-                        : "#229954",
-                      backgroundColor: selectedPlayer?.isAlive
-                        ? "rgba(231, 76, 60, 0.04)"
-                        : "rgba(39, 174, 96, 0.04)",
-                    },
-                  }}
-                >
-                  {selectedPlayer?.isAlive ? "Mark as Dead" : "Mark as Alive"}
-                </Button>
-              </Stack>
-            </Box>
-
-            {/* Tasks */}
-            <Box>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                Tasks
-              </Typography>
-              <PlayerTask playerId={selectedPlayerId} tasks={tasks} />
-            </Box>
-          </Stack>
+          <PlayerDetails
+            player={selectedPlayer}
+            playerId={selectedPlayerId}
+            tasks={tasks}
+            handleClosePlayerDialog={handleClosePlayerDialog}
+            onToggleAlive={handleTogglePlayerStatus}
+            renderTasks={({ playerId, tasks }) => (
+              <PlayerTask playerId={playerId} tasks={tasks} />
+            )}
+          />
         </DialogContent>
       </Dialog>
     </Box>
