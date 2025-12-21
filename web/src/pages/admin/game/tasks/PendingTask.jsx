@@ -37,9 +37,18 @@ export default function PendingTask({ players, playerId, pendingTasks }) {
                 borderColor: "divider",
               }}
             >
-              <Typography variant="body1" sx={{ flex: 1 }}>
-                {task.name}
-              </Typography>
+              <Box sx={{ flex: 1, mr: 2 }}>
+                <Typography variant="body1">{task.name}</Typography>
+                {task.solution && (
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mt: 0.5 }}
+                  >
+                    Solution: {task.solution}
+                  </Typography>
+                )}
+              </Box>
               <Stack direction="row" spacing={1}>
                 <Button
                   size="small"

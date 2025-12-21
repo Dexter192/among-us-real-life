@@ -3,7 +3,8 @@
         "1": {
             "name": "Fix Wiring",
             "location": "Electrical",
-            "description": "Connect the cables to the correct colours"
+            "description": "Connect the cables to the correct colours",
+            "solution": "This is a really long solution. To see if it gets rendered correctly and does overflow properly in the task box, we are adding a lot of extra text here. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog."
         },
         "2": {
             "name": "Clear Astroids",
@@ -15,7 +16,8 @@
         "1": {
             "name": "Fix Wiring",
             "location": "Electrical",
-            "description": "Connect the cables to the correct colours"
+            "description": "Connect the cables to the correct colours",
+            "solution": "Yellow to Yellow"
         }
     }
 }
