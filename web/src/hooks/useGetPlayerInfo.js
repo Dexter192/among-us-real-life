@@ -9,21 +9,26 @@ export function useGetPlayerInfo() {
   const [playerInfo, setPlayerInfo] = useState(undefined);
 
   useEffect(() => {
-    if (socket === null) return;
+    if (socket === null || !authId) return;
     socket.emit("get_player_info", { authId });
 
     socket.on("player_info", (info) => {
       setPlayerInfo(info);
     });
-  }, [socket]);
+  }, [socket, authId]);
 
   const refetchPlayerInfo = () => {
-    socket.emit("get_player_info", { authId });
+    if (socket && authId) {
+      socket.emit("get_player_info", { authId });
+    }
   };
 
-  socket.on("trigger_player_refresh", () => {
-    refetchPlayerInfo();
-  });
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("trigger_player_refresh", () => {
+      refetchPlayerInfo();
+    });
+  }, [socket, authId]);
 
   const handleNameChange = (event) => {
     const newName = event.target.value;

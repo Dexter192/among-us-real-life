@@ -6,7 +6,7 @@ let socketInstance = null;
 let connectionCount = 0;
 
 function getOrCreateSocket(authId) {
-  if (!socketInstance) {
+  if (!socketInstance && authId) {
     const socketUrl = import.meta.env.VITE_SOCKET_URL || undefined;
     const socketPath = import.meta.env.VITE_SOCKET_PATH || "/api/socket.io";
     socketInstance = io(socketUrl, {
