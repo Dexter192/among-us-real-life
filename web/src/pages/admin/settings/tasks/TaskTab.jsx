@@ -19,8 +19,13 @@ export default function TaskTab() {
       data={data}
       activeKey={activeKey}
       presets={presets}
-      onAdd={(name, location, description) =>
-        addItem({ name, location, description })
+      onAdd={(name, location, description, solution) =>
+        addItem({
+          name,
+          location,
+          description,
+          ...(solution ? { solution } : {}),
+        })
       }
       onDelete={deleteItem}
       onSavePreset={savePreset}
@@ -31,6 +36,8 @@ export default function TaskTab() {
       secondaryKey="location"
       tertiaryLabel="Description"
       tertiaryKey="description"
+      quaternaryLabel="Solution (optional)"
+      quaternaryKey="solution"
       addButtonLabel="Add"
       emptyMessage="No tasks yet."
     />

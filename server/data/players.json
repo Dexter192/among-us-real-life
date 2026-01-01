@@ -1,26 +1,4 @@
 {
-    "admins": {
-        "gs1wm4ml7xtmirf4jym": {
-            "sid": "ZztTWYwuW3h1MX5fAAAH",
-            "role": "ADMIN",
-            "tasks": [],
-            "name": null,
-            "isAlive": true,
-            "votes": 0,
-            "votedFor": null,
-            "characterId": 6
-        }
-    },
-    "players": {
-        "252u1ipxd0cmiretmxw": {
-            "sid": "XNGcQ_vs6eCV_DCBAAAD",
-            "role": "PLAYER",
-            "tasks": [],
-            "name": "DevPlayer",
-            "isAlive": true,
-            "votes": 0,
-            "votedFor": null,
-            "characterId": 4
-        }
-    }
+  "admins": {},
+  "players": {}
 }
