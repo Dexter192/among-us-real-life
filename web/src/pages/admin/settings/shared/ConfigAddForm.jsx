@@ -63,6 +63,8 @@ export default function ConfigAddForm({
           type={quaternaryType}
           value={quaternaryValue}
           onChange={(e) => setQuaternaryValue(e.target.value)}
+          multiline={quaternaryType === "text"}
+          rows={quaternaryType === "text" ? 2 : 1}
           fullWidth
         />
       )}

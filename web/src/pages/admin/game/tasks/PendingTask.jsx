@@ -43,7 +43,7 @@ export default function PendingTask({ players, playerId, pendingTasks }) {
                   <Typography
                     variant="body2"
                     color="text.secondary"
-                    sx={{ mt: 0.5 }}
+                    sx={{ mt: 0.5, whiteSpace: "pre-wrap" }}
                   >
                     Solution: {task.solution}
                   </Typography>
