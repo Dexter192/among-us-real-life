@@ -6,6 +6,7 @@ export default function TaskTab() {
     data,
     presets,
     addItem,
+    editItem,
     deleteItem,
     savePreset,
     loadPreset,
@@ -27,6 +28,7 @@ export default function TaskTab() {
           ...(solution ? { solution } : {}),
         })
       }
+      onEdit={(id, payload) => editItem(id, payload)}
       onDelete={deleteItem}
       onSavePreset={savePreset}
       onLoadPreset={loadPreset}

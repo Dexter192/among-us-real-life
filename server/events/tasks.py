@@ -37,9 +37,25 @@ async def add_task(sid: str, task_data: Any) -> None:
         )
         game_state.tasks.data["activeTaskList"][str(new_id)] = task_data
         game_state.tasks.save()
-        await sio.emit("tasks", game_state.tasks.data, to=sid)
+        await sio.emit("tasks", game_state.tasks.data)
     else:
         print("Task data must include a 'name' field")
+
+
+@sio.event
+async def edit_task(sid: str, data: Any) -> None:
+    task_id = data.get("id")
+    task_data = data.get("data")
+    print(
+        f"Edit task requested by: {sid} for task id: {task_id} with data: {task_data}"
+    )
+    task_list = game_state.tasks.data.get("activeTaskList", {})
+    if str(task_id) in task_list and task_data and task_data.get("name"):
+        game_state.tasks.data["activeTaskList"][str(task_id)] = task_data
+        game_state.tasks.save()
+        await sio.emit("tasks", game_state.tasks.data, to=sid)
+    else:
+        print(f"Task id: {task_id} not found or invalid task data")
 
 
 @sio.event

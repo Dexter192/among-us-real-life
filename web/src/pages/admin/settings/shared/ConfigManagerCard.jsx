@@ -10,6 +10,7 @@ export default function ConfigManagerCard({
   activeKey,
   presets = [],
   onAdd,
+  onEdit,
   onDelete,
   onSavePreset,
   onLoadPreset,
@@ -39,7 +40,7 @@ export default function ConfigManagerCard({
   const entries = useMemo(
     () =>
       Object.entries(list).sort(([idA], [idB]) => Number(idB) - Number(idA)),
-    [list]
+    [list],
   );
 
   return (
@@ -54,10 +55,12 @@ export default function ConfigManagerCard({
             entries={entries}
             emptyMessage={emptyMessage}
             onDelete={onDelete}
+            onEdit={onEdit}
             secondaryKey={secondaryKey}
             tertiaryKey={tertiaryKey}
             quaternaryKey={quaternaryKey}
             quaternaryLabel={quaternaryLabel}
+            quaternaryType={quaternaryType}
             booleanKey={booleanKey}
             booleanLabel={booleanLabel}
           />
