@@ -5,6 +5,7 @@ export function useTaskConfig() {
     getAllEvent: "get_all_tasks",
     updateEvent: "tasks",
     addEvent: "add_task",
+    editEvent: "edit_task",
     deleteEvent: "delete_task",
     savePresetEvent: "save_task_preset",
     loadPresetEvent: "load_task_preset",

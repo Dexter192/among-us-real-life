@@ -9,11 +9,14 @@ import {
   Stack,
 } from "@mui/material";
 import { useConfirmTask } from "../../../../hooks/useConfirmTask";
+import { useRerollTask } from "../../../../hooks/useRerollTask";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import CasinoIcon from "@mui/icons-material/Casino";
 
 export default function PlayerTask({ playerId, tasks }) {
   const { completeTask } = useConfirmTask();
+  const { rerollTask } = useRerollTask();
 
   const handleMarkComplete = (taskId) => {
     completeTask(playerId, taskId, true);
@@ -21,6 +24,10 @@ export default function PlayerTask({ playerId, tasks }) {
 
   const handleMarkIncomplete = (taskId) => {
     completeTask(playerId, taskId, false);
+  };
+
+  const handleReroll = (taskId) => {
+    rerollTask(playerId, taskId);
   };
 
   if (!tasks || Object.keys(tasks).length === 0) {
@@ -52,16 +59,16 @@ export default function PlayerTask({ playerId, tasks }) {
                     task.completed
                       ? "Completed"
                       : task.pending
-                      ? "Pending"
-                      : "Open"
+                        ? "Pending"
+                        : "Open"
                   }
                   size="small"
                   sx={{
                     backgroundColor: task.completed
                       ? "#27ae60"
                       : task.pending
-                      ? "#f39c12"
-                      : "#3498db",
+                        ? "#f39c12"
+                        : "#3498db",
                     color: "white",
                     mt: 1,
                   }}
@@ -80,7 +87,7 @@ export default function PlayerTask({ playerId, tasks }) {
               disabled={task.completed}
               sx={{ flex: 1 }}
             >
-              Mark Complete
+              Complete
             </Button>
             <Button
               variant="contained"
@@ -91,9 +98,20 @@ export default function PlayerTask({ playerId, tasks }) {
               disabled={!task.completed && !task.pending}
               sx={{ flex: 1 }}
             >
-              Mark Incomplete
+              Incomplete
             </Button>
           </Stack>
+
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            startIcon={<CasinoIcon />}
+            onClick={() => handleReroll(taskId)}
+            fullWidth
+          >
+            Reroll Task
+          </Button>
         </ListItem>
       ))}
     </List>

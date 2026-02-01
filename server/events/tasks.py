@@ -207,6 +207,65 @@ async def get_pending_tasks(sid: str) -> None:
 
 
 @sio.event
+async def reroll_player_task(sid: str, data: Any) -> None:
+    admin_id = data.get("adminId")
+    player_id = data.get("playerId")
+    task_id = data.get("taskId")
+
+    if admin_id not in game_state.players.data.get("admins", {}):
+        print(f"Unauthorized reroll attempt by: {sid}")
+        return
+
+    players = game_state.players.data.get("players", {})
+    player = players.get(player_id, {})
+
+    if not player:
+        print(f"Player {player_id} not found")
+        return
+
+    player_tasks = player.get("tasks", {})
+    if task_id not in player_tasks:
+        print(f"Task {task_id} not found for player {player_id}")
+        return
+
+    # Get all available tasks from activeTaskList
+    # Filter out tasks that the player already has (by name)
+    current_task_names = set(task.get("name") for task in player_tasks.values())
+    available_tasks = [
+        v
+        for v in game_state.tasks.data.get("activeTaskList", {}).values()
+        if v.get("name") not in current_task_names
+    ]
+    if not available_tasks:
+        print("No available tasks to reroll - player has all available tasks")
+        return
+
+    # Select a random task
+    new_task_data = copy.deepcopy(random.choice(available_tasks))
+    new_task_data["completed"] = False
+    new_task_data["pending"] = False
+
+    # Remove from pending tasks if it was pending
+    if player_id in game_state.state["pending_tasks"]:
+        if task_id in game_state.state["pending_tasks"][player_id]:
+            game_state.state["pending_tasks"][player_id].pop(task_id)
+
+    # Replace the task
+    player_tasks[task_id] = new_task_data
+
+    game_state.players.save()
+
+    print(f"Rerolled task {task_id} for player {player['name']} ({player_id})")
+
+    # Emit updates
+    player_sid = player.get("sid")
+    if player_sid:
+        await sio.emit("player_tasks", player_tasks, to=player_sid)
+    await sio.emit("player_tasks", player_tasks, to=sid)
+    await sio.emit("pending_tasks", game_state.state["pending_tasks"])
+
+
+@sio.event
 async def reset_n_tasks(sid: str, data: Any) -> None:
     num_tasks = data.get("numTasks", 0)
 

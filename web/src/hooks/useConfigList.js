@@ -5,6 +5,7 @@ export function useConfigList({
   getAllEvent,
   updateEvent,
   addEvent,
+  editEvent,
   deleteEvent,
   savePresetEvent,
   loadPresetEvent,
@@ -36,6 +37,11 @@ export function useConfigList({
     socket.emit(addEvent, payload);
   };
 
+  const editItem = (id, payload) => {
+    if (!socket || !editEvent) return;
+    socket.emit(editEvent, { id, data: payload });
+  };
+
   const deleteItem = (id) => {
     if (!socket || !deleteEvent) return;
     socket.emit(deleteEvent, id);
@@ -65,6 +71,7 @@ export function useConfigList({
     data,
     presets,
     addItem,
+    editItem,
     deleteItem,
     savePreset,
     loadPreset,
