@@ -112,6 +112,8 @@ export default function ConfigEditDialog({
                   [quaternaryKey]: e.target.value,
                 })
               }
+              multiline={quaternaryType === "text"}
+              rows={quaternaryType === "text" ? 3 : 1}
               fullWidth
             />
           )}

@@ -248,10 +248,8 @@ async def reroll_player_task(sid: str, data: Any) -> None:
     # If player is an imposter, carry over sabotage information
     old_task = player_tasks[task_id]
     if player.get("game_role") == "IMPOSTER":
-        if "sabotageId" in old_task:
-            new_task_data["sabotageId"] = old_task["sabotageId"]
-        if "sabotage" in old_task:
-            new_task_data["sabotage"] = old_task["sabotage"]
+        if "linked_sabotage" in old_task:
+            new_task_data["linked_sabotage"] = old_task["linked_sabotage"]
 
     # Remove from pending tasks if it was pending
     if player_id in game_state.state["pending_tasks"]:
