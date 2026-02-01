@@ -89,7 +89,7 @@ export default function SabotageBanner({ gameState }) {
           )}
         </Box>
         <Typography variant="body2" color="text.secondary">
-          {activeSabotageId}
+          {activeSabotage?.diffuseDescription}
         </Typography>
         {hasTimer && (
           <Box
