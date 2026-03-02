@@ -16,6 +16,7 @@ export default function PlayerLogin({ isAuthorized, setIsAuthorized }) {
   const { authId } = useAuthId();
   const [isWaitingForAuth, setIsWaitingForAuth] = useState(false);
   const { socket } = useSocketConnection();
+  const SESSION_GRACE_MS = 900000;
 
   useEffect(() => {
     if (!socket) return;
@@ -33,14 +34,24 @@ export default function PlayerLogin({ isAuthorized, setIsAuthorized }) {
   useEffect(() => {
     if (!socket) return;
 
-    socket.emit("is_logged_in", {
-      role: "PLAYER",
-      authId: authId,
-    });
+    let disconnectTimer = null;
+
+    const requestReauth = () => {
+      socket.emit("is_logged_in", {
+        role: "PLAYER",
+        authId: authId,
+      });
+    };
+
+    requestReauth();
 
     socket.on("login_response", (response) => {
       setIsWaitingForAuth(false);
       if (response.success) {
+        if (disconnectTimer) {
+          clearTimeout(disconnectTimer);
+          disconnectTimer = null;
+        }
         setIsAuthorized(true);
       } else {
         setPlayerCode("");
@@ -50,14 +61,32 @@ export default function PlayerLogin({ isAuthorized, setIsAuthorized }) {
 
     const onDisconnect = (reason) => {
       console.log("[PlayerPage] socket disconnected:", reason);
-      setIsAuthorized(false);
+      if (disconnectTimer) {
+        clearTimeout(disconnectTimer);
+      }
+      disconnectTimer = setTimeout(() => {
+        setIsAuthorized(false);
+      }, SESSION_GRACE_MS);
+    };
+
+    const onConnect = () => {
+      if (disconnectTimer) {
+        clearTimeout(disconnectTimer);
+        disconnectTimer = null;
+      }
+      requestReauth();
     };
 
     socket.on("disconnect", onDisconnect);
+    socket.on("connect", onConnect);
 
     return () => {
       socket.off("login_response");
       socket.off("disconnect", onDisconnect);
+      socket.off("connect", onConnect);
+      if (disconnectTimer) {
+        clearTimeout(disconnectTimer);
+      }
     };
   }, [socket, authId, setIsAuthorized]);
 
