@@ -50,7 +50,7 @@ export default function SabotageBanner({ gameState }) {
     return null;
   }
 
-  const hasTimer = Boolean(activeSabotage?.sabotageEndUTC);
+  const hasTimer = Boolean(timerTarget);
   const isLowTime = timeLeft < 60000;
   const canDismiss = Boolean(activeSabotage?.dismissByPlayer);
 
@@ -63,65 +63,86 @@ export default function SabotageBanner({ gameState }) {
   }
 
   return (
-    <Card
+    <Box
       sx={{
+        position: "fixed",
+        inset: 0,
+        zIndex: theme.zIndex.modal,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "rgba(0, 0, 0, 0.55)",
         p: 2,
-        mb: 2,
-        backgroundColor: isLowTime
-          ? theme.palette.error.light
-          : theme.palette.info.light,
       }}
     >
-      <Stack spacing={1}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, flex: 1 }}>
-            Sabotage Active: {activeSabotage?.name}
-          </Typography>
-          {canDismiss && (
-            <IconButton
-              aria-label="dismiss sabotage"
-              onClick={handleDismiss}
-              size="small"
-              sx={{ color: theme.palette.error.dark }}
-            >
-              <CloseIcon />
-            </IconButton>
-          )}
-        </Box>
-        <Typography variant="body2" color="text.secondary">
-          {activeSabotage?.diffuseDescription}
-        </Typography>
-        {hasTimer && (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              justifyContent: "flex-start",
-            }}
-          >
-            <AccessTimeIcon
-              sx={{
-                color: isLowTime
-                  ? theme.palette.error.dark
-                  : theme.palette.info.dark,
-              }}
-            />
+      <Card
+        sx={{
+          width: "100%",
+          maxWidth: 640,
+          p: 3,
+          backgroundColor: isLowTime
+            ? theme.palette.error.light
+            : theme.palette.info.light,
+          boxShadow: 24,
+        }}
+      >
+        <Stack spacing={1.5}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography
               variant="h5"
+              sx={{ fontWeight: 700, flex: 1, color: "text.primary" }}
+            >
+              Sabotage aktiv: {activeSabotage?.name}
+            </Typography>
+            {canDismiss && (
+              <IconButton
+                aria-label="dismiss sabotage"
+                onClick={handleDismiss}
+                size="small"
+                sx={{ color: theme.palette.error.dark }}
+              >
+                <CloseIcon />
+              </IconButton>
+            )}
+          </Box>
+
+          <Typography variant="body1" color="text.secondary">
+            {activeSabotage?.diffuseDescription}
+          </Typography>
+
+          {hasTimer && (
+            <Box
               sx={{
-                fontWeight: 700,
-                color: isLowTime
-                  ? theme.palette.error.dark
-                  : theme.palette.info.dark,
-                fontFamily: "monospace",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                justifyContent: "center",
+                width: "100%",
               }}
             >
-              {formatTime(timeLeft)}
-            </Typography>
-          </Box>
-        )}
-      </Stack>
-    </Card>
+              <AccessTimeIcon
+                sx={{
+                  color: isLowTime
+                    ? theme.palette.error.dark
+                    : theme.palette.info.dark,
+                }}
+              />
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  color: isLowTime
+                    ? theme.palette.error.dark
+                    : theme.palette.info.dark,
+                  fontFamily: "monospace",
+                }}
+              >
+                {formatTime(timeLeft)}
+              </Typography>
+            </Box>
+          )}
+        </Stack>
+      </Card>
+    </Box>
   );
 }

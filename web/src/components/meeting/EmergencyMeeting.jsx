@@ -1,5 +1,6 @@
 import { useGetPlayers } from "../../hooks/useGetPlayers";
 import PlayerCard from "./PlayerCard";
+import SkipVoteCard from "./SkipVoteCard";
 import MeetingTimer from "../Timer";
 import {
   Box,
@@ -37,11 +38,14 @@ export default function EmergencyMeeting({ gameState, isAdmin = false }) {
   }
 
   const alive = Object.fromEntries(
-    Object.entries(players).filter(([_, p]) => p.isAlive)
+    Object.entries(players).filter(([_, p]) => p.isAlive),
   );
   const dead = Object.fromEntries(
-    Object.entries(players).filter(([_, p]) => !p.isAlive)
+    Object.entries(players).filter(([_, p]) => !p.isAlive),
   );
+  const callerId = gameState?.emergencyMeetingCallerId;
+  const callerName =
+    callerId && players[callerId] ? players[callerId].name : null;
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default", py: 3 }}>
@@ -64,6 +68,11 @@ export default function EmergencyMeeting({ gameState, isAdmin = false }) {
             </Typography>
           </Stack>
           <DeadBanner playerInfo={playerInfo} />
+          {callerName && (
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              Gemeldet von: {callerName}
+            </Typography>
+          )}
           {playerInfo?.isAlive && (
             <Typography variant="body1" color="text.secondary">
               Besprecht euch und versucht, einen Imposter aus dem Spiel zu
@@ -88,6 +97,10 @@ export default function EmergencyMeeting({ gameState, isAdmin = false }) {
             </Button>
           </Box>
         )}
+
+        <Box sx={{ mb: 4 }}>
+          <SkipVoteCard players={players} isAdmin={isAdmin} />
+        </Box>
 
         {/* Alive Players */}
         {Object.keys(alive).length > 0 && (

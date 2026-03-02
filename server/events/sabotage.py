@@ -135,13 +135,23 @@ async def trigger_sabotage_if_needed(player: dict, task: dict) -> None:
     )
     player["sabotages"][sabotage_id]["used"] = True
     game_state.state["sabotage_triggered"] = sabotage_id
+
+    active_sabotage_state = game_state.state.get("sabotages", {}).get(sabotage_id)
     timer_seconds = sabotage.get("timerSeconds")
     if timer_seconds:
-        sabotage["sabotageEndUTC"] = (
+        sabotage_end_utc = (
             datetime.now().astimezone() + timedelta(seconds=int(timer_seconds))
         ).isoformat()
+        sabotage["sabotageEndUTC"] = sabotage_end_utc
+        game_state.state["sabotageEndUTC"] = sabotage_end_utc
+        if active_sabotage_state is not None:
+            active_sabotage_state["sabotageEndUTC"] = sabotage_end_utc
     else:
         sabotage["sabotageEndUTC"] = None
+        game_state.state["sabotageEndUTC"] = None
+        if active_sabotage_state is not None:
+            active_sabotage_state["sabotageEndUTC"] = None
+
     game_state.players.save()
     await sio.emit("game_state", game_state.state)
 
@@ -167,5 +177,7 @@ async def diffuse_sabotage(sid: str, sabotage_id: str) -> None:
 
     game_state.state["sabotage_triggered"] = None
     game_state.state["sabotageEndUTC"] = None
+    if sabotage_id in game_state.state.get("sabotages", {}):
+        game_state.state["sabotages"][sabotage_id]["sabotageEndUTC"] = None
     game_state.sabotages.save()
     await sio.emit("game_state", game_state.state)

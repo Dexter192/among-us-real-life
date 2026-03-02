@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Box, IconButton, Stack, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useGetPlayerInfo } from "../../../../hooks/useGetPlayerInfo";
@@ -6,7 +6,7 @@ import { useGetPlayers } from "../../../../hooks/useGetPlayers";
 import { useAuthId } from "../../../../hooks/useAuthId";
 import ImposterPeer from "./ImposterPeer";
 
-export default function RoleView() {
+export default function RoleView({ gameState }) {
   const { playerInfo } = useGetPlayerInfo();
   const { authId } = useAuthId();
   const { imposters } = useGetPlayers();
@@ -23,6 +23,44 @@ export default function RoleView() {
     });
   const role = playerInfo?.game_role || "UNKNOWN";
   const [showRole, setShowRole] = useState(false);
+  const [killCooldownTime, setKillCooldownTime] = useState(0);
+
+  useEffect(() => {
+    const isImposter = playerInfo?.game_role === "IMPOSTER";
+    if (!isImposter || !gameState?.endOfKillCooldownUTC) {
+      setKillCooldownTime(0);
+      return;
+    }
+
+    const cooldownSeconds = Math.max(
+      0,
+      Math.floor(
+        (new Date(gameState.endOfKillCooldownUTC) - new Date()) / 1000,
+      ),
+    );
+    setKillCooldownTime(cooldownSeconds);
+
+    const interval = setInterval(() => {
+      setKillCooldownTime((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [gameState?.endOfKillCooldownUTC, playerInfo?.game_role]);
+
+  const formatCooldown = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const isKillCooldownActive =
+    playerInfo?.game_role === "IMPOSTER" && killCooldownTime > 0;
 
   return (
     <>
@@ -80,6 +118,7 @@ export default function RoleView() {
             <Stack spacing={2} alignItems="center">
               <Box
                 sx={{
+                  position: "relative",
                   backgroundImage: `url(/images/characters/char${
                     playerInfo?.characterId || 0
                   }.png)`,
@@ -89,7 +128,36 @@ export default function RoleView() {
                   width: "100%",
                   minHeight: 140,
                 }}
-              />
+              >
+                {isKillCooldownActive && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "rgba(0, 0, 0, 0.55)",
+                      borderRadius: 1,
+                    }}
+                  >
+                    <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                      Kill verfügbar in
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: "1.6rem",
+                        color: "white",
+                        fontFamily: "monospace",
+                      }}
+                    >
+                      {formatCooldown(killCooldownTime)}
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>
                 {role}
               </Typography>

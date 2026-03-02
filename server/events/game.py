@@ -106,6 +106,13 @@ def initilize_game_state():
         datetime.now().astimezone()
         + timedelta(minutes=int(state.config.data.get("meetingCooldownMinutes")))
     ).isoformat()
+    kill_cooldown_seconds = int(state.config.data.get("killCooldownSeconds", 0))
+    if kill_cooldown_seconds > 0:
+        state.state["endOfKillCooldownUTC"] = (
+            datetime.now().astimezone() + timedelta(seconds=kill_cooldown_seconds)
+        ).isoformat()
+    else:
+        state.state["endOfKillCooldownUTC"] = None
 
 
 async def game_timer():
@@ -156,6 +163,7 @@ async def stop_game(sid: str) -> None:
     state.state["started"] = False
     state.state["sabotage_triggered"] = None
     state.state["sabotageEndUTC"] = None
+    state.state["endOfKillCooldownUTC"] = None
     if game_timer_task:
         game_timer_task.cancel()
         game_timer_task = None
@@ -177,6 +185,7 @@ async def reset_game(sid: str) -> None:
         "pending_tasks": {},
         "sabotage_triggered": None,
         "sabotageEndUTC": None,
+        "endOfKillCooldownUTC": None,
     }
     reset_player_states()
     if game_timer_task:

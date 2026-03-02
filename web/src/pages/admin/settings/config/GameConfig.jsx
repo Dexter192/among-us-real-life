@@ -62,6 +62,18 @@ function GameConfig() {
               fullWidth
             />
             <TextField
+              label="Kill cooldown (seconds)"
+              value={gameConfig.killCooldownSeconds}
+              type="number"
+              onChange={(e) =>
+                updateConfig({
+                  ...gameConfig,
+                  killCooldownSeconds: e.target.value,
+                })
+              }
+              fullWidth
+            />
+            <TextField
               label="Task Progress Update Delay (seconds)"
               value={gameConfig.progressUpdateDelay}
               type="number"

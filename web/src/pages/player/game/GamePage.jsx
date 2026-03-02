@@ -36,7 +36,7 @@ export default function GamePage({ gameState }) {
       {playerInfo?.isAlive && (
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
           <ReportDeadBody gameState={gameState} />
-          <RoleView />
+          <RoleView gameState={gameState} />
         </Stack>
       )}
       <TaskTab />

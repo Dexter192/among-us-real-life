@@ -25,6 +25,8 @@ class GameState:
                 "pending_tasks": {},
                 "sabotage_triggered": None,
                 "sabotageEndUTC": None,
+                "emergencyMeetingCallerId": None,
+                "endOfKillCooldownUTC": None,
             }
             cls._instance.players.reset({"admins": {}, "players": {}})
         return cls._instance
