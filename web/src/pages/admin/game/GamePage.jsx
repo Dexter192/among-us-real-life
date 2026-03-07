@@ -5,6 +5,7 @@ import GameTimer from "../../../components/Timer";
 import PlayerTab from "./players/PlayerTab";
 import PendingTaskList from "./tasks/PendingTaskList";
 import SabotageInfo from "./sabotage/SabotageInfo";
+import TriggerSabotage from "./sabotage/TriggerSabotage";
 import { Box, Divider, Typography } from "@mui/material";
 import GameActions from "./GameActions";
 
@@ -23,6 +24,11 @@ export default function GamePage({ gameState }) {
       <PendingTaskList />
       <Divider sx={{ my: 2 }} />
       <PlayerTab gameState={gameState} />
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="h6" sx={{ mb: 1 }}>
+        Trigger Sabotage
+      </Typography>
+      <TriggerSabotage gameState={gameState} />
       <Divider sx={{ my: 2 }} />
       <Box
         sx={{

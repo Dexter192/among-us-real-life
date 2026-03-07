@@ -157,6 +157,49 @@ async def trigger_sabotage_if_needed(player: dict, task: dict) -> None:
 
 
 @sio.event
+async def trigger_sabotage(sid: str, sabotage_id: str) -> None:
+    """Allow an admin to manually trigger any configured sabotage."""
+    print(f"Manual sabotage trigger requested by: {sid} for sabotage id: {sabotage_id}")
+
+    # Only admins may trigger sabotages manually
+    admin_sids = {
+        admin_info.get("sid")
+        for admin_info in game_state.players.data.get("admins", {}).values()
+    }
+    if sid not in admin_sids:
+        print("Trigger blocked: caller is not an admin.")
+        return
+
+    if game_state.state.get("sabotage_triggered"):
+        print("Sabotage already active, not triggering another.")
+        return
+
+    sabotage_list = game_state.sabotages.data.get("activeSabotageList", {})
+    sabotage = sabotage_list.get(str(sabotage_id))
+    if not sabotage:
+        print(f"Sabotage id: {sabotage_id} not found in activeSabotageList.")
+        return
+
+    game_state.state["sabotage_triggered"] = sabotage_id
+
+    # Ensure sabotages dict exists in game state
+    game_state.state.setdefault("sabotages", {})[sabotage_id] = {**sabotage}
+
+    timer_seconds = sabotage.get("timerSeconds")
+    if timer_seconds:
+        sabotage_end_utc = (
+            datetime.now().astimezone() + timedelta(seconds=int(timer_seconds))
+        ).isoformat()
+        game_state.state["sabotageEndUTC"] = sabotage_end_utc
+        game_state.state["sabotages"][sabotage_id]["sabotageEndUTC"] = sabotage_end_utc
+    else:
+        game_state.state["sabotageEndUTC"] = None
+        game_state.state["sabotages"][sabotage_id]["sabotageEndUTC"] = None
+
+    await sio.emit("game_state", game_state.state)
+
+
+@sio.event
 async def diffuse_sabotage(sid: str, sabotage_id: str) -> None:
     print(f"Diffuse sabotage requested by: {sid} for sabotage id: {sabotage_id}")
     if game_state.state.get("sabotage_triggered") != sabotage_id:
